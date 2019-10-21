@@ -1,0 +1,87 @@
+<html>
+    <head>
+        <style>
+        </style>
+        <script>
+            function newProduct(){
+                var updateRequest = new XMLHttpRequest();
+                var inputNaam = document.getElementById("naam").value;
+                var inputVoorraad = document.getElementById("voorraad").value;
+                var mijnObject = {};
+                mijnObject.name = inputNaam;
+                mijnObject.stock = inputVoorraad;
+                var myJSONObject = JSON.stringify(mijnObject);
+                updateRequest.onreadystatechange = function(){
+                    console.log("readystate = veranderd");
+                }
+                updateRequest.open("POST", "http://localhost:8082/product",true);
+                updateRequest.setRequestHeader("Content-type", "application/json");
+                updateRequest.send(myJSONObject);
+                
+
+                 
+
+            }
+            function lijstOpvragen(){
+                var xhr=new XMLHttpRequest();
+                xhr.onreadystatechange = function(){
+                    if(this.readyState == 4 && this.status == 200){
+                    var handler = xhr.responseText;
+                    console.log(handler);
+                    var hetObject = JSON.parse(handler);
+                    console.log(hetObject);
+                    lijstMaken(hetObject);
+                    }
+                    }
+
+                xhr.open("GET","http://localhost:8082/product",true);
+                xhr.send();
+            }
+
+            function lijstMaken(object){
+                let table = document.createElement("table");
+                table.id = "ditiseentabel";
+                let tr = document.createElement("tr");
+                let td1 = document.createElement("td");
+                td1.innerHTML= "id";
+                tr.appendChild(td1);
+                let td2 = document.createElement("td");
+                td2.innerHTML="naam";
+                tr.appendChild(td2);
+                let td3 = document.createElement("td");
+                td3.innerHTML="voorraad";
+                tr.appendChild(td3);
+                table.appendChild(tr);
+                for(i=0;i<object.length;i++){
+                    let tr = document.createElement("tr");
+                    let td1 = document.createElement("td");
+                    td1.innerHTML= object[i].id;
+                    tr.appendChild(td1);
+                    let td2 = document.createElement("td");
+                    td2.innerHTML=object[i].name;
+                    tr.appendChild(td2);
+                    let td3 = document.createElement("td");
+                    td3.innerHTML=object[i].stock;
+                    tr.appendChild(td3);
+                    table.appendChild(tr);
+                }
+                document.getElementById("resultaat").appendChild(table);
+                if(document.getElementById("resultaat").children.length > 1){
+                    document.getElementById("resultaat").removeChild(document.getElementById("resultaat").children[0]);
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <div id="resultaat"></div>
+        <h5>naam</h5>
+        <input type="text" id="naam" >
+        <h5>voorraad</h5>
+        <input type="text" id="voorraad">
+        <br>
+        <input type="button" value="voeg nieuw product toe" onclick="newProduct()">
+        <br>
+        <input type="button" value="geef lijst" onclick="lijstOpvragen()">
+
+    </body>
+</html>
