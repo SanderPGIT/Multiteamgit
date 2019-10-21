@@ -70,6 +70,54 @@
                     document.getElementById("resultaat").removeChild(document.getElementById("resultaat").children[0]);
                 }
             }
+
+            function lijstOpvragen2(){
+                var xhr=new XMLHttpRequest();
+                xhr.onreadystatechange = function(){
+                    if(this.readyState == 4 && this.status == 200){
+                    var handler = xhr.responseText;
+                    console.log(handler);
+                    var hetObject = JSON.parse(handler);
+                    console.log(hetObject);
+                    selectielijst(hetObject);
+                    }
+                    }
+
+                xhr.open("GET","http://localhost:8082/product",true);
+                xhr.send();
+            }
+            
+            function selectielijst(hetobject){
+                var selectp = document.getElementById("selectnumber");
+                for(i=0; i<hetobject.length; i++){
+                    var para = document.createElement("option");
+                    para.innerHTML="id="+hetobject[i].id+" naam="+hetobject[i].name+" voorraad:"+hetobject[i].stock;
+                    para.value=hetobject[i].id;
+                //    var opt = hetobject[i];
+                //    var node= document.createTextNode("id="+hetobject[i].id+" naam="+hetobject[i].name+"voorraad:"+hetobject[i].stock);
+                    selectp.appendChild(para);
+                    console.log(para);
+            }
+
+            }
+
+            function verwijder(){
+                var idproduct= document.getElementById("selectnumber").value;
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function(){
+                    console.log("readystate = veranderd");
+                    }
+                var urlproduct= "http://localhost:8082/product/"+idproduct;
+                console.log(urlproduct);
+                xhr.open("DELETE", urlproduct,true);
+                xhr.send(null);
+                
+            }
+
+
+           
+
+           
         </script>
     </head>
     <body>
@@ -82,6 +130,13 @@
         <input type="button" value="voeg nieuw product toe" onclick="newProduct()">
         <br>
         <input type="button" value="geef lijst" onclick="lijstOpvragen()">
+        <form id="myform">
+            <select id="selectnumber">
+                <option>Choose a product</option>
+            </select>
+        </form>
+        <input type="button" onclick="lijstOpvragen2()" value=vuldropdown>
+        <input type="button" onclick= "verwijder()" value=verwijder>
 
     </body>
 </html>
