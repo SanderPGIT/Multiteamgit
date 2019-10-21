@@ -17,10 +17,6 @@
                 updateRequest.open("POST", "http://localhost:8082/product",true);
                 updateRequest.setRequestHeader("Content-type", "application/json");
                 updateRequest.send(myJSONObject);
-                
-
-                 
-
             }
             function lijstOpvragen(){
                 var xhr=new XMLHttpRequest();
@@ -114,9 +110,24 @@
                 
             }
 
+            function verander(){
+                var idproduct = document.getElementById("selectnumber").value;
+                var inputNaam = document.getElementById("naam").value;
+                var inputVoorraad = document.getElementById("voorraad").value;
+                var mijnObject = {};
+                mijnObject.id=idproduct;
+                mijnObject.name = inputNaam;
+                mijnObject.stock = inputVoorraad;
+                var myJSONObject = JSON.stringify(mijnObject);
+                console.log(myJSONObject);
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function(){
 
-           
-
+                }
+                xhr.open("PUT", "http://localhost:8082/product", true);
+                xhr.setRequestHeader("Content-type", "application/json");
+                xhr.send(myJSONObject);
+            }
            
         </script>
     </head>
@@ -137,6 +148,7 @@
         </form>
         <input type="button" onclick="lijstOpvragen2()" value=vuldropdown>
         <input type="button" onclick= "verwijder()" value=verwijder>
+        <input type="button" onclick = "verander()" value =verander>
 
     </body>
 </html>
