@@ -3,21 +3,6 @@
         <style>
         </style>
         <script>
-            function newProduct(){
-                var updateRequest = new XMLHttpRequest();
-                var inputNaam = document.getElementById("naam").value;
-                var inputVoorraad = document.getElementById("voorraad").value;
-                var mijnObject = {};
-                mijnObject.name = inputNaam;
-                mijnObject.stock = inputVoorraad;
-                var myJSONObject = JSON.stringify(mijnObject);
-                updateRequest.onreadystatechange = function(){
-                    console.log("readystate = veranderd");
-                }
-                updateRequest.open("POST", "http://localhost:8082/product",true);
-                updateRequest.setRequestHeader("Content-type", "application/json");
-                updateRequest.send(myJSONObject);
-            }
             function lijstOpvragen(){
                 var xhr=new XMLHttpRequest();
                 xhr.onreadystatechange = function(){
@@ -67,88 +52,23 @@
                 }
             }
 
-            function lijstOpvragen2(){
-                var xhr=new XMLHttpRequest();
-                xhr.onreadystatechange = function(){
-                    if(this.readyState == 4 && this.status == 200){
-                    var handler = xhr.responseText;
-                    console.log(handler);
-                    var hetObject = JSON.parse(handler);
-                    console.log(hetObject);
-                    selectielijst(hetObject);
-                    }
-                    }
-
-                xhr.open("GET","http://localhost:8082/product",true);
-                xhr.send();
-            }
             
-            function selectielijst(hetobject){
-                var selectp = document.getElementById("selectnumber");
-                for(i=0; i<hetobject.length; i++){
-                    var para = document.createElement("option");
-                    para.innerHTML="id="+hetobject[i].id+" naam="+hetobject[i].name+" voorraad:"+hetobject[i].stock;
-                    para.value=hetobject[i].id;
-                //    var opt = hetobject[i];
-                //    var node= document.createTextNode("id="+hetobject[i].id+" naam="+hetobject[i].name+"voorraad:"+hetobject[i].stock);
-                    selectp.appendChild(para);
-                    console.log(para);
-            }
-
-            }
-
-            function verwijder(){
-                var idproduct= document.getElementById("selectnumber").value;
-                var xhr = new XMLHttpRequest();
-                xhr.onreadystatechange = function(){
-                    console.log("readystate = veranderd");
-                    }
-                var urlproduct= "http://localhost:8082/product/"+idproduct;
-                console.log(urlproduct);
-                xhr.open("DELETE", urlproduct,true);
-                xhr.send(null);
-                
-            }
-
-            function verander(){
-                var idproduct = document.getElementById("selectnumber").value;
-                var inputNaam = document.getElementById("naam").value;
-                var inputVoorraad = document.getElementById("voorraad").value;
-                var mijnObject = {};
-                mijnObject.id=idproduct;
-                mijnObject.name = inputNaam;
-                mijnObject.stock = inputVoorraad;
-                var myJSONObject = JSON.stringify(mijnObject);
-                console.log(myJSONObject);
-                var xhr = new XMLHttpRequest();
-                xhr.onreadystatechange = function(){
-
-                }
-                xhr.open("PUT", "http://localhost:8082/product", true);
-                xhr.setRequestHeader("Content-type", "application/json");
-                xhr.send(myJSONObject);
-            }
            
         </script>
     </head>
     <body>
+        <h1>product main menu</h1>
         <div id="resultaat"></div>
-        <h5>naam</h5>
-        <input type="text" id="naam" >
-        <h5>voorraad</h5>
-        <input type="text" id="voorraad">
-        <br>
-        <input type="button" value="voeg nieuw product toe" onclick="newProduct()">
-        <br>
-        <input type="button" value="geef lijst" onclick="lijstOpvragen()">
-        <form id="myform">
-            <select id="selectnumber">
-                <option>Choose a product</option>
-            </select>
+        <input type="button" value="refresh product list" onclick="lijstOpvragen()">
+        <h5></h5>
+        <form action="file:///C:/_Multifiles/product_toevoegen.html">
+            <input type="submit" value="add products"/>
         </form>
-        <input type="button" onclick="lijstOpvragen2()" value=vuldropdown>
-        <input type="button" onclick= "verwijder()" value=verwijder>
-        <input type="button" onclick = "verander()" value =verander>
-
+        <form action="file:///C:/_Multifiles/product_verwijderen.html">
+            <input type="submit" value="remove products"/>
+        </form>
+        <form action="file:///C:/_Multifiles/product_aanpassen.html">
+            <input type="submit" value="update products"/>
+        </form>
     </body>
 </html>
