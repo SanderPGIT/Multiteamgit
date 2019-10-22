@@ -1,0 +1,130 @@
+<html>
+	<head>
+		<style>
+		</style>
+		<script>
+			 function lijstOpvragen2(){
+                var xhr=new XMLHttpRequest();
+                xhr.onreadystatechange = function(){
+                    if(this.readyState == 4 && this.status == 200){
+                    var handler = xhr.responseText;
+                    console.log(handler);
+                    var hetObject = JSON.parse(handler);
+                    console.log(hetObject);
+                    selectielijst(hetObject);
+                    }
+                    }
+
+                xhr.open("GET","http://localhost:8082/product",true);
+                xhr.send();
+            }
+            function selectielijst(hetobject){
+                var selectp = document.getElementById("selectnumber");
+				selectp.innerHTML=0;
+                for(i=0; i<hetobject.length; i++){
+                    var para = document.createElement("option");
+                    para.innerHTML="id="+hetobject[i].id+" naam="+hetobject[i].name+" voorraad:"+hetobject[i].stock;
+                    para.value=hetobject[i].id;
+                    selectp.appendChild(para);
+            		}
+            }
+
+            function verwijderdrop(){
+                var idproduct= document.getElementById("selectnumber").value;
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function(){
+                    console.log("readystate = veranderd");
+                    }
+                var urlproduct= "http://localhost:8082/product/"+idproduct;
+                console.log(urlproduct);
+                xhr.open("DELETE", urlproduct,true);
+                xhr.send(null);
+				document.getElementById("selectnumber").innerHTML=0;
+            }
+
+			function searchproduct(){
+				var zoekterm= document.getElementById("zoekterm").value;
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function(){
+					if(this.readyState == 4 && this.status == 200){
+                    	var handler = xhr.responseText;
+                    	console.log(handler);
+                   		var hetObject = JSON.parse(handler);
+						console.log(hetObject);
+						lijstMaken(hetObject);   
+                    	}
+				}	
+                var urlproduct= "http://localhost:8082/product/zoeknaam?naamstring="+zoekterm;
+                console.log(urlproduct);
+                xhr.open("GET", urlproduct,true);
+                xhr.send();
+
+			}
+
+			function lijstMaken(object){
+                let table = document.createElement("table");
+                table.id = "ditiseentabel";
+                let tr = document.createElement("tr");
+                let td2 = document.createElement("td");
+                td2.innerHTML="naam";
+                tr.appendChild(td2);
+                let td3 = document.createElement("td");
+                td3.innerHTML="voorraad";
+                tr.appendChild(td3);
+                table.appendChild(tr);
+                let tr2 = document.createElement("tr");
+				document.getElementById("hiddenid").value=object.id;
+                let td22 = document.createElement("td");
+                td22.innerHTML=object.name;
+                tr2.appendChild(td22);
+                let td32 = document.createElement("td");
+                td32.innerHTML=object.stock;
+                tr2.appendChild(td32);
+                table.appendChild(tr2);
+                document.getElementById("resultaat").appendChild(table);
+                if(document.getElementById("resultaat").children.length > 1){
+                    document.getElementById("resultaat").removeChild(document.getElementById("resultaat").children[0]);
+                }
+            }
+
+			function verwijdersearch(){
+				var hetid=document.getElementById("hiddenid").value;
+				console.log(hetid);
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function(){
+                    console.log("readystate = veranderd");
+                    }
+                var urlproduct= "http://localhost:8082/product/"+hetid;
+                console.log(urlproduct);
+                xhr.open("DELETE", urlproduct,true);
+                xhr.send();
+				document.getElementById("hiddenid").innerHTML="";		
+			}
+				
+		</script>
+	</head>
+	<body>
+		<h1>remove products</h1>
+		<h5>select a product from the dropdown list or search for a product</h5>
+		<form id="myform">
+			<select id="selectnumber">
+				<option >select item from dropdown</option>
+			</select>
+		</form>
+		<input type="button" onclick="lijstOpvragen2()" value="refresh dropdown list">
+		<input type="button" onclick= "verwijderdrop()" value="remove dropdown selection">
+		<h5></h5>
+		<input type="text" id="zoekterm">
+		<input type="button" onclick="searchproduct()" value=search>
+		<h6></h6>
+		<div id="resultaat"></div>
+		<input hidden type ="number" id="hiddenid">
+		<h6></h6>
+		<input onclick="verwijdersearch()" type="button" value="remove the searched item">
+		<h5></h5>
+		<form action="file:///C:/_Multifiles/index.html">
+			<input type="submit" value="back to product start page"/>
+		</form>
+
+	</body>
+</html>
