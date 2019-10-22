@@ -1,0 +1,75 @@
+<html>
+    <head>
+        <style>
+        </style>
+        <script>
+            function lijstOpvragen(){
+                var requestVar = new XMLHttpRequest();
+                requestVar.onreadystatechange=function(){
+                    console.log("readystate is changed");
+                    if(requestVar.readyState==4){
+                    var reactie = this.responseText;
+                    console.log(reactie);
+
+                    var JSONObject = JSON.parse(reactie);
+                    console.log(JSONObject);                    
+                    
+                    for(i=0;i<JSONObject.length;i++){
+                        console.log(i);
+                        document.getElementById("lijstsuppliers").innerHTML += JSONObject[i].id + ", " + JSONObject[i].name +", " + JSONObject[i].productType + "<br>" ;
+                    }
+                    }
+                    
+                }
+                requestVar.open("GET","http://localhost:8082/supplier",true);
+                requestVar.send();
+            }
+
+            function addSupplier(){
+                var requestVar = new XMLHttpRequest();
+                var object ={};
+                object.name = document.getElementById("naamsupplier").value;
+                object.productType= document.getElementById("typesupplier").value;
+                console.log(object);
+                requestVar.onreadystatechange=function(){
+                    console.log("readystate = changed");
+                }
+                var myJSON = JSON.stringify(object);
+                console.log(myJSON);
+
+                requestVar.open("POST","http://localhost:8082/supplier",true);
+                requestVar.setRequestHeader("Content-type", "application/json");
+                requestVar.send(myJSON);
+
+                document.getElementById("naamsupplier").value = null;
+                document.getElementById("typesupplier").value = null;
+            }
+
+            function delSupplier(){
+                var url = "http://localhost:8082/supplier/";
+                var requestVar = new XMLHttpRequest();
+                var id = document.getElementById("idverwijderen").value;
+                console.log(id);
+                requestVar.onreadystatechange = function(){
+                    console.log("readystate has changed");
+                }
+                var urlproduct = url+id;
+                console.log(urlproduct);
+
+
+                requestVar.open("DELETE",urlproduct,true);
+                requestVar.send();
+            }
+
+        </script>
+    </head>
+    <body>
+        <input type="text" size="23" id="naamsupplier" placeholder="voer supplier in"><br>
+        <input type="text" size="23" id="typesupplier" placeholder="voer type in">
+        <input type="button" id="addsupplier" value="Toevoegen" onclick="addSupplier()"><br>
+        <input type="button" value="Lijst opvragen" onclick="lijstOpvragen()">
+        <div id="lijstsuppliers"></div>
+        <input type="text" size="23" id="idverwijderen" placeholder="Voer ID in dat verwijderd wordt"><br>
+        <input type="button" id="delsupplier", value="Verwijderen" onclick="delSupplier()">
+    </body>
+</html>
