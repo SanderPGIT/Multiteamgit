@@ -21,16 +21,17 @@
 
             function lijstMaken(object){
                 let table = document.createElement("table");
+                table.border= 1;
                 table.id = "ditiseentabel";
                 let tr = document.createElement("tr");
-                let td1 = document.createElement("td");
-                td1.innerHTML= "id";
+                let td1 = document.createElement("th");
+                td1.innerHTML= "id:";
                 tr.appendChild(td1);
-                let td2 = document.createElement("td");
-                td2.innerHTML="naam";
+                let td2 = document.createElement("th");
+                td2.innerHTML="naam:";
                 tr.appendChild(td2);
-                let td3 = document.createElement("td");
-                td3.innerHTML="voorraad";
+                let td3 = document.createElement("th");
+                td3.innerHTML="voorraad:";
                 tr.appendChild(td3);
                 table.appendChild(tr);
                 for(i=0;i<object.length;i++){
