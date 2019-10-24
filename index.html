@@ -110,7 +110,7 @@
                 var urlproduct= "http://localhost:8082/product/"+idproduct;
                 console.log(urlproduct);
                 xhr.open("DELETE", urlproduct,true);
-                xhr.send(null);
+                xhr.send();
                 
             }
 
@@ -123,9 +123,9 @@
     <body>
         <div id="resultaat"></div>
         <h5>naam</h5>
-        <input type="text" id="naam" >
+        <input type="text" id="naam" placeholder="geef hier een product" >
         <h5>voorraad</h5>
-        <input type="text" id="voorraad">
+        <input type="text" id="voorraad" placeholder="geef hier een aantal">
         <br>
         <input type="button" value="voeg nieuw product toe" onclick="newProduct()">
         <br>
