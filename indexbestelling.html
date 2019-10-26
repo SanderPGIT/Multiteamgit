@@ -15,7 +15,7 @@
                     }
                     }
 
-                xhr.open("GET","http://localhost:8082/product",true);
+                xhr.open("GET","http://localhost:8082/bestelling",true);
                 xhr.send();
             }
 
@@ -28,10 +28,10 @@
                 td1.innerHTML= "id:";
                 tr.appendChild(td1);
                 let td2 = document.createElement("th");
-                td2.innerHTML="naam:";
+                td2.innerHTML="amount:";
                 tr.appendChild(td2);
                 let td3 = document.createElement("th");
-                td3.innerHTML="voorraad:";
+                td3.innerHTML="products:";
                 tr.appendChild(td3);
                 table.appendChild(tr);
                 for(i=0;i<object.length;i++){
@@ -40,12 +40,28 @@
                     td1.innerHTML= object[i].id;
                     tr.appendChild(td1);
                     let td2 = document.createElement("td");
-                    td2.innerHTML=object[i].name;
+                    td2.innerHTML=object[i].aantal;
                     tr.appendChild(td2);
-                    let td3 = document.createElement("td");
-                    td3.innerHTML=object[i].stock;
-                    tr.appendChild(td3);
-                    table.appendChild(tr);
+                    console.log(object[i].products.length)
+                    for(j=0; j<object[i].products.length;j++){
+                        if (j==0){
+                            let td3 = document.createElement("td");
+                            td3.innerHTML=object[i].products[j].name;
+                            tr.appendChild(td3);
+                            table.appendChild(tr)
+                        }else{
+                            let tr2 = document.createElement("tr");
+                            let td4 = document.createElement("td");
+                            let td5 = document.createElement("td");
+                            let td6 = document.createElement("td");
+                            td6.innerHTML = object[i].products[j].name;
+                            tr2.appendChild(td4);
+                            tr2.appendChild(td5);
+                            tr2.appendChild(td6);
+                            table.appendChild(tr2);
+                        }
+
+                    }
                 }
                 document.getElementById("resultaat").appendChild(table);
                 if(document.getElementById("resultaat").children.length > 1){
@@ -58,18 +74,18 @@
         </script>
     </head>
     <body onload="lijstOpvragen()">
-        <h1>product main menu</h1>
+        <h1>order main menu</h1>
         <div id="resultaat"></div>
-        <input type="button" value="refresh product list" onclick="lijstOpvragen()" >
+        <input type="button" value="refresh list of orders"> 
         <h5></h5>
-        <form action="file:///C:/_Files/Multiteamgit/product_toevoegen.html">
-            <input type="submit" value="add products"/>
+        <form action="file:///C:/_Files/Multiteamgit/bestelling_toevoegen.html">
+            <input type="submit" value="add order"/>
         </form>
-        <form action="file:///C:/_Files/Multiteamgit/product_verwijderen.html">
-            <input type="submit" value="remove products"/>
+        <form action="file:///C:/_Files/Multiteamgit/bestelling_verwijderen.html">
+            <input type="submit" value="remove order"/>
         </form>
-        <form action="file:///C:/_Files/Multiteamgit/product_aanpassen.html">
-            <input type="submit" value="update products"/>
+        <form action="file:///C:/_Files/Multiteamgit/bestelling_aanpassen.html">
+            <input type="submit" value="change order"/>
         </form>
     </body>
 </html>
