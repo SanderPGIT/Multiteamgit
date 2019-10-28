@@ -61,6 +61,28 @@
                 requestVar.send();
             }
 
+            function pasSupplierAan(){
+                var requestVar = new XMLHttpRequest();
+                var object ={};
+                object.id= document.getElementById("veranderid").value
+                object.name = document.getElementById("verandernaam").value;
+                object.productType= document.getElementById("verandertype").value;
+                console.log(object);
+                requestVar.onreadystatechange=function(){
+                    console.log("readystate = changed");
+                }
+                var myJSON = JSON.stringify(object);
+                console.log(myJSON);
+
+                requestVar.open("PUT","http://localhost:8082/supplier",true);
+                requestVar.setRequestHeader("Content-type", "application/json");
+                requestVar.send(myJSON);
+
+                document.getElementById("veranderid").value=null;
+                document.getElementById("verandernaam").value = null;
+                document.getElementById("verandertype").value = null;
+            }
+
         </script>
     </head>
     <body>
@@ -70,6 +92,10 @@
         <input type="button" value="Lijst opvragen" onclick="lijstOpvragen()">
         <div id="lijstsuppliers"></div>
         <input type="text" size="23" id="idverwijderen" placeholder="Voer ID in dat verwijderd wordt"><br>
-        <input type="button" id="delsupplier", value="Verwijderen" onclick="delSupplier()">
+        <input type="button" id="delsupplier", value="Verwijderen" onclick="delSupplier()"><br>
+        <input type="text" size="23" id="veranderid" placeholder="voer te veranderen id in" ><br>
+        <input type="text" size="23" id="verandernaam" placeholder="voer nieuwe supplier in"><br>
+        <input type="text" size="23" id="verandertype" placeholder="voer nieuwe type in">
+        <input type="button" id="aanpassen" onclick="pasSupplierAan()" value="Veranderen">
     </body>
 </html>

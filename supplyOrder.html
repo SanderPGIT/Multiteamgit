@@ -1,0 +1,136 @@
+<html>
+    <head>
+        <style>
+        </style>
+        <script>
+                function lijstOpvragen(){
+                var requestVar = new XMLHttpRequest();
+                requestVar.onreadystatechange=function(){
+                    console.log("readystate is changed");
+                    if(requestVar.readyState==4){
+                    var reactie = this.responseText;
+                    console.log(reactie);
+
+                    var JSONObject = JSON.parse(reactie);
+                    console.log(JSONObject);                    
+                    
+                    for(i=0;i<JSONObject.length;i++){
+                        console.log(i);
+                        document.getElementById("lijstorders").innerHTML += JSONObject[i].id + ", " + JSONObject[i].supplier.name +", " + JSONObject[i].amount + ", " + JSONObject[i].delivered + "<br>" ;
+                    }
+                    }
+                    
+                }
+                requestVar.open("GET","http://localhost:8082/supplyOrder",true);
+                requestVar.send();
+            }
+
+            function addOrder(){
+                var requestVar = new XMLHttpRequest();
+                var object ={};
+                object.amount = document.getElementById("orderaantal").value;
+                object.delivered = document.getElementById("afgeleverd").value;
+                supplier = document.getElementById("dropdown").value;
+                console.log(object);
+                requestVar.onreadystatechange=function(){
+                    console.log("readystate = changed");
+                }
+                var myJSON = JSON.stringify(object);
+                console.log(myJSON);
+
+                var urlproduct="http://localhost:8082/supplyOrder/"+supplier;
+                console.log(urlproduct);
+                requestVar.open("POST",urlproduct,true);
+                requestVar.setRequestHeader("Content-type", "application/json");
+                requestVar.send(myJSON);
+
+                document.getElementById("orderaantal").value = null;
+                document.getElementById("afgeleverd").value = null;
+            }
+
+            function delOrder(){
+                var url = "http://localhost:8082/supplyOrder/";
+                var requestVar = new XMLHttpRequest();
+                var id = document.getElementById("idverwijderen").value;
+                console.log(id);
+                requestVar.onreadystatechange = function(){
+                    console.log("readystate has changed");
+                }
+                var urlproduct = url+id;
+                console.log(urlproduct);
+
+
+                requestVar.open("DELETE",urlproduct,true);
+                requestVar.send();
+            }
+
+            function pasOrderAan(){
+                var requestVar = new XMLHttpRequest();
+                var object ={};
+                object.id= document.getElementById("veranderid").value
+                object.amount = document.getElementById("verandernaam").value;
+                object.delivered= document.getElementById("veranderaantal").value;
+                console.log(object);
+                requestVar.onreadystatechange=function(){
+                    console.log("readystate = changed");
+                }
+                var myJSON = JSON.stringify(object);
+                console.log(myJSON);
+
+                requestVar.open("PUT","http://localhost:8082/supplOrder",true);
+                requestVar.setRequestHeader("Content-type", "application/json");
+                requestVar.send(myJSON);
+
+                document.getElementById("geefid").value=null;
+                document.getElementById("verandernaam").value = null;
+                document.getElementById("veranderaantal").value = null;
+            }
+
+            function loadDropdown(){
+                var requestVar = new XMLHttpRequest();
+                requestVar.onreadystatechange=function(){
+                    console.log("readystate is changed");
+                    if(requestVar.readyState==4){
+                        var reactie = this.responseText;
+                        console.log(reactie);
+
+                        var JSONObject = JSON.parse(reactie);
+                        console.log(JSONObject);
+
+                        console.log("dropdown wordt geladen");
+                        var selectdd = document.getElementById("dropdown");
+                        for(i=0;i<JSONObject.length;i++){
+                            var para = document.createElement("option");
+                            para.innerHTML="naam: " + JSONObject[i].name;
+                            para.value=JSONObject[i].id;
+                            selectdd.appendChild(para);
+                        }                    
+                    }
+                }
+                requestVar.open("GET","http://localhost:8082/supplier",true);
+                requestVar.send();
+            }
+
+
+
+        </script>
+    </head>
+    <body onload="loadDropdown()">
+        <select id="dropdown" >
+            <option >kies een leveraar</option>
+        </select> <br>
+        <input type="text" size="23" id="orderaantal" placeholder="voer aantal in"><br>
+        <input type="text" size="23" id="afgeleverd" placeholder="afgeleverd? (true/false)"><br>
+        <input type="button" id="addOrder" value="Toevoegen" onclick="addOrder()"><br>
+        <input type="button" value="Lijst opvragen" onclick="lijstOpvragen()">
+        <div id="lijstorders"></div>
+        <input type="text" size="23" id="idverwijderen" placeholder="Voer te verwijderen orderID in"><br>
+        <input type="button" id="delOrder", value="Verwijderen" onclick="delOrder()"><br>
+        <input type="text" size="23" id="geefid" placeholder="voer te veranderen id in" ><br>
+        <input type="text" size="23" id="verandernaam" placeholder="voer nieuwe order in"><br>
+        <input type="text" size="23" id="veranderaantal" placeholder="voer nieuw aantal in">
+        <input type="button" id="aanpassen" onclick="pasOrderAan()" value="Veranderen"><br>
+        
+                
+    </body>
+</html>
