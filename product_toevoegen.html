@@ -1,0 +1,36 @@
+<html>
+	<head>
+		<style>
+		</style>
+		<script>
+			function newProduct(){
+                var updateRequest = new XMLHttpRequest();
+                var inputNaam = document.getElementById("naam").value;
+                var inputVoorraad = document.getElementById("voorraad").value;
+                var mijnObject = {};
+                mijnObject.name = inputNaam;
+                mijnObject.stock = inputVoorraad;
+                var myJSONObject = JSON.stringify(mijnObject);
+                updateRequest.onreadystatechange = function(){
+                    console.log("readystate = veranderd");
+                }
+                updateRequest.open("POST", "http://localhost:8082/product",true);
+                updateRequest.setRequestHeader("Content-type", "application/json");
+                updateRequest.send(myJSONObject);
+            }
+		</script>
+	</head>
+	<body>
+	<h1>add new product</h1>
+	<h5>productname:</h5>	
+	<input type=text id='naam'>
+	<h5>current stock:</h5>
+	<input type=text id='voorraad'>
+	<h5></h5>
+	<input type=button onclick=newProduct() value="add product">
+	<h5></h5>
+	<form action="file:///C:/_Files/Multiteamgit/index.html">
+		<input type="submit" value="back to product start page"/>
+	</form>
+	</body>
+</html>
