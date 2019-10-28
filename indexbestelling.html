@@ -1,91 +1,118 @@
 <html>
-    <head>
-        <style>
-        </style>
-        <script>
-            function lijstOpvragen(){
-                var xhr=new XMLHttpRequest();
-                xhr.onreadystatechange = function(){
-                    if(this.readyState == 4 && this.status == 200){
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+<head>
+    <style>
+        .eerste{background-color: green;}
+    </style>
+    <script>
+        function lijstOpvragen() {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
                     var handler = xhr.responseText;
                     console.log(handler);
                     var hetObject = JSON.parse(handler);
                     console.log(hetObject);
                     lijstMaken(hetObject);
-                    }
-                    }
-
-                xhr.open("GET","http://localhost:8082/bestelling",true);
-                xhr.send();
+                }
             }
 
-            function lijstMaken(object){
-                let table = document.createElement("table");
-                table.border= 1;
-                table.id = "ditiseentabel";
+            xhr.open("GET", "http://localhost:8082/bestelling", true);
+            xhr.send();
+        }
+
+        function lijstMaken(object) {
+            let table = document.createElement("table");
+            table.border = 1;
+            table.id = "ditiseentabel";
+            let tr = document.createElement("tr");
+            tr.className= "eerste";  
+            let td1 = document.createElement("th");
+            td1.innerHTML = "id:";
+            tr.appendChild(td1);
+            let td2 = document.createElement("th");
+            td2.innerHTML = "amount:";
+            tr.appendChild(td2);
+            let td3 = document.createElement("th");
+            td3.innerHTML = "products:";
+            tr.appendChild(td3);
+            table.appendChild(tr);
+            for (i = 0; i < object.length; i++) {
                 let tr = document.createElement("tr");
-                let td1 = document.createElement("th");
-                td1.innerHTML= "id:";
+                let td1 = document.createElement("td");
+                td1.innerHTML = object[i].id;
                 tr.appendChild(td1);
-                let td2 = document.createElement("th");
-                td2.innerHTML="amount:";
+                let td2 = document.createElement("td");
+                td2.innerHTML = object[i].aantal;
                 tr.appendChild(td2);
-                let td3 = document.createElement("th");
-                td3.innerHTML="products:";
-                tr.appendChild(td3);
-                table.appendChild(tr);
-                for(i=0;i<object.length;i++){
-                    let tr = document.createElement("tr");
-                    let td1 = document.createElement("td");
-                    td1.innerHTML= object[i].id;
-                    tr.appendChild(td1);
-                    let td2 = document.createElement("td");
-                    td2.innerHTML=object[i].aantal;
-                    tr.appendChild(td2);
-                    console.log(object[i].products.length)
-                    for(j=0; j<object[i].products.length;j++){
-                        if (j==0){
-                            let td3 = document.createElement("td");
-                            td3.innerHTML=object[i].products[j].name;
-                            tr.appendChild(td3);
-                            table.appendChild(tr)
-                        }else{
-                            let tr2 = document.createElement("tr");
-                            let td4 = document.createElement("td");
-                            let td5 = document.createElement("td");
-                            let td6 = document.createElement("td");
-                            td6.innerHTML = object[i].products[j].name;
-                            tr2.appendChild(td4);
-                            tr2.appendChild(td5);
-                            tr2.appendChild(td6);
-                            table.appendChild(tr2);
-                        }
-
+                console.log(object[i].products.length)
+                for (j = 0; j < object[i].products.length; j++) {
+                    if (j == 0) {
+                        let td3 = document.createElement("td");
+                        td3.innerHTML = object[i].products[j].name;
+                        tr.appendChild(td3);
+                        table.appendChild(tr)
+                    } else {
+                        let tr2 = document.createElement("tr");
+                        tr2.style.borderBottomColor = "red";
+                        let td4 = document.createElement("td");
+                        let td5 = document.createElement("td");
+                        let td6 = document.createElement("td");
+                        td6.innerHTML = object[i].products[j].name;
+                        tr2.appendChild(td4);
+                        tr2.appendChild(td5);
+                        tr2.appendChild(td6);
+                        table.appendChild(tr2);
                     }
-                }
-                document.getElementById("resultaat").appendChild(table);
-                if(document.getElementById("resultaat").children.length > 1){
-                    document.getElementById("resultaat").removeChild(document.getElementById("resultaat").children[0]);
+
                 }
             }
+            document.getElementById("resultaat").appendChild(table);
+            if (document.getElementById("resultaat").children.length > 1) {
+                document.getElementById("resultaat").removeChild(document.getElementById("resultaat").children[0]);
+            }
+        }
+    </script>
+</head>
 
-            
-           
-        </script>
-    </head>
-    <body onload="lijstOpvragen()">
-        <h1>order main menu</h1>
-        <div id="resultaat"></div>
-        <input type="button" value="refresh list of orders"> 
-        <h5></h5>
-        <form action="file:///C:/_Files/Multiteamgit/bestelling_toevoegen.html">
-            <input type="submit" value="add order"/>
-        </form>
-        <form action="file:///C:/_Files/Multiteamgit/bestelling_verwijderen.html">
-            <input type="submit" value="remove order"/>
-        </form>
-        <form action="file:///C:/_Files/Multiteamgit/bestelling_aanpassen.html">
-            <input type="submit" value="change order"/>
-        </form>
-    </body>
+<body onload="lijstOpvragen()">
+    <div class="row">
+                <div class="col-sm-12" style="background-color:lavender;">
+                        <h1 align="center">order main menu</h1>
+                </div>
+    </div>
+    <h5></h5>
+    <div id="resultaat" align="center"></div>
+    <h5></h5>
+    <div class="row" align="center">
+            <div class="col-sm-3">
+                    <button class="btn btn-success">refresh list of orders</button>
+            </div>
+            <div class="col-sm-3">
+                    <form action="file:///C:/_Files/Multiteamgit/bestelling_toevoegen.html">
+                        <input type="submit" class="btn btn-primary" value="new order" />
+                    </form>
+            </div>
+            <div class="col-sm-3">
+                    <form action="file:///C:/_Files/Multiteamgit/bestelling_verwijderen.html">
+                        <input type="submit" class="btn btn-danger" value="remove order" />
+                    </form>
+            </div>
+            <div class="col-sm-3">
+                    <form action="file:///C:/_Files/Multiteamgit/bestelling_aanpassen.html">
+                        <input type="submit" class="btn btn-warning" value="change order" />
+                    </form>
+            </div>
+    </div>
+
+</body>
+
 </html>
