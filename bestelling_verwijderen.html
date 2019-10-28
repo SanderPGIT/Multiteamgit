@@ -1,4 +1,12 @@
 <html>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 	<head>
 		<style>
 		</style>
@@ -49,92 +57,36 @@
                 xhr.open("DELETE", urlproduct,true);
                 xhr.send(null);
 				document.getElementById("selectnumber").innerHTML=0;
-            }
-
-			/* function searchproduct(){
-				var zoekterm= document.getElementById("zoekterm").value;
-                var xhr = new XMLHttpRequest();
-                xhr.onreadystatechange = function(){
-					if(this.readyState == 4 && this.status == 200){
-                    	var handler = xhr.responseText;
-                    	console.log(handler);
-                   		var hetObject = JSON.parse(handler);
-						console.log(hetObject);
-						lijstMaken(hetObject);   
-                    	}
-				}	
-                var urlproduct= "http://localhost:8082/product/zoeknaam?naamstring="+zoekterm;
-                console.log(urlproduct);
-                xhr.open("GET", urlproduct,true);
-                xhr.send();
-
-			} */
-
-			/* function lijstMaken(object){
-                let table = document.createElement("table");
-                table.id = "ditiseentabel";
-                table.border=1;
-                let tr = document.createElement("tr");
-                let td2 = document.createElement("th");
-                td2.innerHTML="naam:";
-                tr.appendChild(td2);
-                let td3 = document.createElement("th");
-                td3.innerHTML="voorraad:";
-                tr.appendChild(td3);
-                table.appendChild(tr);
-                let tr2 = document.createElement("tr");
-				document.getElementById("hiddenid").value=object.id;
-                let td22 = document.createElement("td");
-                td22.innerHTML=object.name;
-                tr2.appendChild(td22);
-                let td32 = document.createElement("td");
-                td32.innerHTML=object.stock;
-                tr2.appendChild(td32);
-                table.appendChild(tr2);
-                document.getElementById("resultaat").appendChild(table);
-                if(document.getElementById("resultaat").children.length > 1){
-                    document.getElementById("resultaat").removeChild(document.getElementById("resultaat").children[0]);
-                }
-            } */
-
-			/* function verwijdersearch(){
-				var hetid=document.getElementById("hiddenid").value;
-				console.log(hetid);
-                var xhr = new XMLHttpRequest();
-                xhr.onreadystatechange = function(){
-                    console.log("readystate = veranderd");
-                    }
-                var urlproduct= "http://localhost:8082/product/"+hetid;
-                console.log(urlproduct);
-                xhr.open("DELETE", urlproduct,true);
-                xhr.send();
-				document.getElementById("hiddenid").innerHTML="";		
-			} */
-				
+                alert("order has been removed")
+            }				
 		</script>
 	</head>
-	<body>
-		<h1>remove products</h1>
-		<h2>by dropdown selection:</h2>
-		<form id="myform">
-			<select id="selectnumber">
-				<option >select item from dropdown</option>
-			</select>
-		</form>
-		<input type="button" onclick="lijstOpvragen2()" value="refresh dropdown list">
-		<input type="button" onclick= "verwijderdrop()" value="remove dropdown selection">
-		<h2>with search: </h2>
-		<input type="text" id="zoekterm">
-		<input type="button" onclick="searchproduct()" value=search>
-		<h6></h6>
-		<div id="resultaat"></div>
-		<input hidden type ="number" id="hiddenid">
-		<h6></h6>
-		<input onclick="verwijdersearch()" type="button" value="remove the searched item">
-		<h5></h5>
-		<form action="file:///C:/_Files/Multiteamgit/indexbestelling.html">
-			<input type="submit" value="back to order start page"/>
-		</form>
+    <body onload="lijstOpvragen2()">
+        <div class="row">
+                <div class="col-sm-12" style="background-color:red;">
+                            <h1 align="center">remove order</h1>
+                </div>
+        </div>
+        <h5></h5>
+        <div align="center">
+            <select id="selectnumber">
+                <option ></option>
+            </select>
+        </div>
+        <h5></h5>
+        <div class="row" align="center">
+                <div class="col-sm-4">
+                        <input type="button" onclick="lijstOpvragen2()" class= "btn btn-primary" value="refresh dropdown list">
+                </div>
+                <div class="col-sm-4">
+                        <input type="button" class="btn btn-warning" onclick= "verwijderdrop()" value="remove dropdown selection">
+                </div>
+                <div class="col-sm-4">
+                        <form action="file:///C:/_Files/Multiteamgit/indexbestelling.html">
+                            <input type="submit" class="btn btn-success" value="back to order main menu"/>
+                        </form>
+                </div>
+        </div>
 
 	</body>
 </html>
