@@ -1,0 +1,43 @@
+<html>
+	<head>
+		<style>
+		</style>
+		<script>
+			function newCustomer(){
+                var updateRequest = new XMLHttpRequest();
+                var inputNaam = document.getElementById("naam").value;
+                var inputadres = document.getElementById("adres").value;
+				var inputpostcode = document.getElementById("postcode").value;
+                var inputwoonplaats = document.getElementById("woonplaats").value;
+                var mijnObject = {};
+                mijnObject.naam = inputNaam;
+                mijnObject.adres = inputadres;
+				mijnObject.postcode= inputpostcode;
+				mijnObject.woonplaats = inputwoonplaats;
+				console.log(mijnObject);
+                var myJSONObject = JSON.stringify(mijnObject);
+				console.log(myJSONObject);
+                updateRequest.onreadystatechange = function(){
+                    console.log("readystate = veranderd");
+                }
+                updateRequest.open("POST", "http://localhost:8082/klant",true);
+                updateRequest.setRequestHeader("Content-type", "application/json");
+                updateRequest.send(myJSONObject);
+            }
+		</script>
+	</head>
+	<body>
+	<h1>Become our new customer!:</h1>
+	<h5>What is your full name:</h5>	
+	<input type=text id='naam'>
+	<h5>Please enter your address:</h5>
+	<input type=text id='adres'>
+	<h5>Please enter your postal code:</h5>
+	<input type=text id='postcode'>
+	<h5>Please enter your residence:</h5>
+	<input type=text id='woonplaats'>
+	<h5></h5>
+	<input type=button onclick=newCustomer() value="Sign up">
+	<h5></h5>
+	</body>
+</html>
