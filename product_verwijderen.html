@@ -104,7 +104,7 @@
 				
 		</script>
 	</head>
-	<body>
+	<body onload="lijstOpvragen2()">
 		<h1>remove products</h1>
 		<h2>by dropdown selection:</h2>
 		<form id="myform">
@@ -113,7 +113,8 @@
 			</select>
 		</form>
 		<input type="button" onclick="lijstOpvragen2()" value="refresh dropdown list">
-		<input type="button" onclick= "verwijderdrop()" value="remove dropdown selection">
+        <input type="button" onclick= "verwijderdrop()" value="remove dropdown selection">
+        <hr>
 		<h2>with search: </h2>
 		<input type="text" id="zoekterm">
 		<input type="button" onclick="searchproduct()" value=search>
@@ -123,7 +124,7 @@
 		<h6></h6>
 		<input onclick="verwijdersearch()" type="button" value="remove the searched item">
 		<h5></h5>
-		<form action="file:///C:/_Files/Multiteamgit/index.html">
+		<form action="file:///C:/_Files/Multiteamgit/indexproduct.html">
 			<input type="submit" value="back to product start page"/>
 		</form>
 

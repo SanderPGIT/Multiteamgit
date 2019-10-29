@@ -1,4 +1,12 @@
 <html>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 	<head>
 		<style>
 		</style>
@@ -28,8 +36,6 @@
                     selectp.appendChild(para);
             		}
             }
-			//var selectedproducts = {};
-			//selectedproducts.products=[];
 			producten=[];
 			function productselected(){
 				var idproduct= document.getElementById("selectnumber").value;
@@ -39,6 +45,7 @@
                     var handler = xhr.responseText;
 					geparsed=JSON.parse(handler);
 					producten.push(geparsed);
+					document.getElementById("resultaat").innerHTML= "product: "+ geparsed.name + " is added to order";
 					document.getElementById("hiddenid").value=producten;
 
                     }
@@ -67,24 +74,39 @@
             }
 		</script>
 	</head>
+
 	<body onload="lijstOpvragen2()">
-	<h1>add new order</h1>
-	<h5>product amount:</h5>	
-	<input type=text id='aantal'>
-	<h5>products:</h5>
-	<form id="myform">
+		<div class="row">
+					<div class="col-sm-12" style="background-color:blue;">
+							<h1 align="center">add new order</h1>
+					</div>
+		</div>
+	<h5 align="center">product amount:</h5>
+	<div align="center">
+			<input type=text id='aantal' align="center">
+	</div>	
+	<h5 align="center">products:</h5>
+	<form id="myform" align="center">
 			<select id="selectnumber">
 				<option >select item from dropdown</option>
 			</select>
 	</form> 
 	<h5></h5>
-	<input type=button onclick="productselected()" value="add product to order">
-	<h5></h5>
+	<div class="row" align="center">
+            <div class="col-sm-4">
+					<input type=button onclick="neworder()" class="btn btn-primary" value="add order">
+            </div>
+            <div class="col-sm-4">
+					<input type=button onclick="productselected()" class="btn btn-warning" value="add product to order">
+            </div>
+            <div class="col-sm-4">
+					<form action="file:///C:/_Files/Multiteamgit/indexbestelling.html">
+						<input type="submit" class="btn btn-success" value="back to order main menu"/>
+					</form>
+            </div>
+    </div>
+	<hr>
+	<div id="resultaat" align="center"></div>
 	<input hidden type ="number" id="hiddenid">
-	<input type=button onclick="neworder()" value="add order">
-	<h5></h5>
-	<form action="file:///C:/_Files/Multiteamgit/indexbestelling.html">
-		<input type="submit" value="back to order main menu"/>
-	</form>
 	</body>
 </html>

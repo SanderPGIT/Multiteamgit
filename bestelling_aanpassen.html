@@ -1,0 +1,207 @@
+<html>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+<head>
+    <style>
+    </style>
+    <script>
+        function lijstOpvragen2() {
+            lijstOpvragen3();
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var handler = xhr.responseText;
+                    console.log(handler);
+                    var hetObject = JSON.parse(handler);
+                    console.log(hetObject);
+                    selectielijst(hetObject);
+                }
+            }
+
+            xhr.open("GET", "http://localhost:8082/bestelling", true);
+            xhr.send();
+        }
+        function selectielijst(hetobject) {
+            var selectp = document.getElementById("selectnumber");
+            selectp.innerHTML = 0;
+            for (i = 0; i < hetobject.length; i++) {
+                var para = document.createElement("option");
+                para.innerHTML = "id=" + hetobject[i].id + " amount=" + hetobject[i].aantal + " products:";
+                console.log(para);
+                for (j = 0; j < hetobject[i].products.length; j++) {
+                    if (j == (hetobject[i].products.length - 1)) {
+                        para.innerHTML = para.innerHTML + hetobject[i].products[j].name
+                    } else {
+                        para.innerHTML = para.innerHTML + hetobject[i].products[j].name + " +";
+                    }
+                    console.log(para);
+                }
+                para.value = hetobject[i].id;
+                selectp.appendChild(para);
+            }
+        }
+
+        function veranderopvragen(debestelling) {
+
+            var idorder = document.getElementById("selectnumber").value;
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var handler = xhr.responseText;
+                    geparsed = JSON.parse(handler);
+                    veranderverander(geparsed);
+                }
+            }
+            var urlproduct = "http://localhost:8082/bestelling/" + idorder;
+            xhr.open("GET", urlproduct, true);
+            xhr.send();
+        }
+
+        function veranderverander(debestelling) {
+            var changechoice = document.getElementById("typechange").value;
+            if (changechoice == "amount") {
+                debestelling.aantal = document.getElementById("newamount").value;
+                var myJSONObject = JSON.stringify(debestelling);
+                console.log(myJSONObject);
+                var xhr2 = new XMLHttpRequest();
+                xhr2.onreadystatechange = function () {
+                }
+                xhr2.open("PUT", "http://localhost:8082/bestelling", true);
+                xhr2.setRequestHeader("Content-type", "application/json");
+                xhr2.send(myJSONObject);
+
+            }
+            if (changechoice == "products") {
+                debestelling.products = producten;
+                var myJSONObject = JSON.stringify(debestelling);
+                var xhr2 = new XMLHttpRequest();
+                xhr2.onreadystatechange = function () {
+                }
+                xhr2.open("PUT", "http://localhost:8082/bestelling", true);
+                xhr2.setRequestHeader("Content-type", "application/json");
+                xhr2.send(myJSONObject);
+            }
+            if (changechoice == "amount and products") {
+                debestelling.aantal = document.getElementById("newamount").value;
+                debestelling.products = producten;
+                var myJSONObject = JSON.stringify(debestelling);
+                var xhr2 = new XMLHttpRequest();
+                xhr2.onreadystatechange = function () {
+                }
+                xhr2.open("PUT", "http://localhost:8082/bestelling", true);
+                xhr2.setRequestHeader("Content-type", "application/json");
+                xhr2.send(myJSONObject);
+            }
+        }
+
+        function lijstOpvragen3() {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var handler = xhr.responseText;
+                    console.log(handler);
+                    var hetObject = JSON.parse(handler);
+                    console.log(hetObject);
+                    selectielijst2(hetObject);
+                }
+            }
+
+            xhr.open("GET", "http://localhost:8082/product", true);
+            xhr.send();
+        }
+        function selectielijst2(hetobject) {
+            var selectp = document.getElementById("selectnumber2");
+            selectp.innerHTML = 0;
+            for (i = 0; i < hetobject.length; i++) {
+                var para = document.createElement("option");
+                para.innerHTML = "id=" + hetobject[i].id + " naam=" + hetobject[i].name + " voorraad:" + hetobject[i].stock;
+                para.value = hetobject[i].id;
+                selectp.appendChild(para);
+            }
+        }
+
+        producten = [];
+        function productselected() {
+            var idproduct = document.getElementById("selectnumber2").value;
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var handler = xhr.responseText;
+                    geparsed = JSON.parse(handler);
+                    producten.push(geparsed);
+                    document.getElementById("hiddenid").value = producten;
+
+                }
+            }
+            var urlproduct = "http://localhost:8082/product/" + idproduct;
+            xhr.open("GET", urlproduct, true);
+            xhr.send();
+        }
+    </script>
+</head>
+
+<body onload="lijstOpvragen2()">
+    <div class="row">
+        <div class="col-sm-12" style="background-color:orange;">
+            <h1 align="center">change order</h1>
+        </div>
+    </div>
+    <h5 align="center">select order:</h5>
+    <form id="myform" align="center">
+        <select id="selectnumber">
+            <option>first refresh dropdown</option>
+        </select>
+    </form>
+    <h5 align="center">what do you want to change in your order:</h5>
+    <h5></h5>
+    <form align="center">
+        <select id="typechange">
+            <option></option>
+            <option value="amount">amount</option>
+            <option value="products">products</option>
+            <option value="amount and products">amount and products</option>
+        </select>
+    </form>
+
+    <h5 align="center">change amount (optional):</h5>
+    <div align="center">
+            <input type=text id="newamount">
+    </div>
+    <h5 align="center">change products (optional):</h5>
+    <form align ="center" id="myform">
+        <select id="selectnumber2">
+            <option>first refresh dropdown</option>
+        </select>
+    </form>
+    <h5></h5>
+    <input hidden type="number" id="hiddenid">
+    <div class="row" align="center">
+            <div class="col-sm-3">
+                    <input type="button" onclick="lijstOpvragen2()" class="btn btn-success" value="refresh dropdown">
+            </div>
+            <div class="col-sm-3">
+                    <input type=button onclick="productselected()" class="btn btn-info" value="add product to order">
+            </div>
+            <div class="col-sm-3">
+                    <input type="button" onclick="veranderopvragen()" class= "btn btn-warning" value="save changed order">
+            </div>
+            <div class="col-sm-3">
+                    <form action="file:///C:/_Files/Multiteamgit/indexbestelling.html">
+                        <input type="submit" class ="btn btn-primary" value="back to order main menu" />
+                    </form>
+            </div>
+    </div>
+
+
+
+
+</body>
+
+</html>
