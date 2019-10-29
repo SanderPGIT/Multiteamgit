@@ -1,0 +1,51 @@
+<html>
+	<head>
+		<style>
+		</style>
+		<script>
+			function verander(){
+                var idcustomer= window.location.hash.substring(1);
+                console.log(idcustomer);
+                var customernaam = document.getElementById("naam").value;
+                var customeradres = document.getElementById("adres").value;
+                var customerpostcode = document.getElementById("postcode").value;
+                var customerwoonplaats = document.getElementById("woonplaats").value;
+                var mijnObject = {};
+                mijnObject.klantid=idcustomer;
+                mijnObject.naam = customernaam;
+                mijnObject.adres = customeradres;
+                mijnObject.postcode = customerpostcode;
+                mijnObject.woonplaats = customerwoonplaats;
+                var myJSONObject = JSON.stringify(mijnObject);
+                console.log(myJSONObject);
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function(){
+
+                }
+                xhr.open("PUT", "http://localhost:8082/klant", true);
+                xhr.setRequestHeader("Content-type", "application/json");
+                xhr.send(myJSONObject);
+            }
+
+
+		</script>
+	</head>
+	<body >
+		<h1>change customer profile</h1>
+		<h5>change or retype name:</h5>
+		<input type=text id="naam">
+		<h5>change or retype adress:</h5>
+        <input type=text id="adres">
+        <h5>change or retype postal code:</h5>
+        <input type=text id="postcode">
+        <h5>change or retype residence: </h5>
+		<input type=text id="woonplaats">
+		<h5></h5>
+		<input type="button" onclick= "verander()" value="save">
+	
+		<form action="file:///C:/_Files/Multiteamgit/klantindex.html">
+			<input type="submit" value="back to product customer overview"/>
+		</form>
+		
+	</body>
+</html>
