@@ -17,7 +17,7 @@
                     
                     for(i=0;i<JSONObject.length;i++){
                         console.log(i);
-                        document.getElementById("lijstorders").innerHTML += JSONObject[i].id + ", " + JSONObject[i].supplier.name +", " + JSONObject[i].amount + ", " + JSONObject[i].delivered + "<br>" ;
+                        document.getElementById("lijstorders").innerHTML += JSONObject[i].id + ", " + JSONObject[i].supplier.name +" ("+JSONObject[i].supplier.productType + "), " + JSONObject[i].amount + ", " + JSONObject[i].delivered + "<br>" ;
                     }
                     }
                     
@@ -106,14 +106,14 @@
                         var selectdd = document.getElementById("dropdown", "dropdown2");
                         for(i=0;i<JSONObject.length;i++){
                             var para = document.createElement("option");
-                            para.innerHTML="naam: " + JSONObject[i].name;
+                            para.innerHTML=JSONObject[i].name+" ("+JSONObject[i].productType+")";
                             para.value=JSONObject[i].id;
                             selectdd.appendChild(para);
                         }
                         var selectdd2 = document.getElementById("dropdown2");
                         for(i=0;i<JSONObject.length;i++){
                             var para = document.createElement("option");
-                            para.innerHTML="naam: " + JSONObject[i].name;
+                            para.innerHTML = JSONObject[i].name+" ("+JSONObject[i].productType+")";
                             para.value=JSONObject[i].id;
                             selectdd2.appendChild(para);
                         }               
@@ -127,24 +127,32 @@
 
         </script>
     </head>
-    <body onload="loadDropdown()">
+    <body  onload="loadDropdown(),lijstOpvragen()">
+        <h1>Leveringen</h1>
+        <h2>Voeg een levering toe</h2>
+        <div id="lijstorders"></div><br>
+
         <select id="dropdown" >
             <option >kies een leveraar</option>
         </select> <br>
         <input type="text" size="23" id="orderaantal" placeholder="voer aantal in"><br>
-        <input type="text" size="23" id="afgeleverd" placeholder="afgeleverd? (true/false)"><br>
-        <input type="button" id="addOrder" value="Toevoegen" onclick="addOrder()"><br>
-        <input type="button" value="Lijst opvragen" onclick="lijstOpvragen()">
-        <div id="lijstorders"></div>
-        <input type="text" size="23" id="idverwijderen" placeholder="Voer te verwijderen orderID in"><br>
+        <input type="text" size="23" id="afgeleverd" placeholder="afgeleverd? (true/false)">
+        <input type="button" id="addOrder" value="Toevoegen" onclick="addOrder()"><br><br>
+        <input type="button" value="Lijst vernieuwen" onclick="lijstOpvragen()">
+        <h2>Verwijder een levering</h2>
+        <input type="text" size="23" id="idverwijderen" placeholder="Voer te verwijderen orderID in">
         <input type="button" id="delOrder", value="Verwijderen" onclick="delOrder()"><br>
+        <h2>Verander de status van een order</h2>
         <select id="dropdown2" >
             <option >kies een nieuwe leveraar</option>
-        </select>
+        </select><br>
         <input type="text" size="23" id="veranderid" placeholder="Geef te veranderen id"><br>
         <input type="text" size="23" id="veranderaantal" placeholder="Voer nieuw aantal in" ><br>
-        <input type="text" size="23" id="verandergeleverd" placeholder="Pas 'geleverd' aan"><br>
-        <input type="button" id="aanpassen" onclick="pasOrderAan()" value="Veranderen"><br>
+        <input type="text" size="23" id="verandergeleverd" placeholder="Pas 'geleverd' aan">
+        <input type="button" id="aanpassen" onclick="pasOrderAan()" value="Veranderen"><br><br>
+        <form action="C:\_Files\Multiteamgit\supplier.html">
+            <input type="submit" value="ga naar leveranciers">
+        </form>
         
                 
     </body>
