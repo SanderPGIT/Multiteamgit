@@ -59,17 +59,23 @@
                     td5.innerHTML=object[i].woonplaats;
                     tr.appendChild(td5);
                     let td6 = document.createElement("button");
-                    td6.innerHTML="delete";
+                    td6.innerHTML="log in";
                     td6.onclick= function(){
-                        verwijder(td1.innerHTML);
+                        inloggen(td1.innerHTML);
                     };
                     tr.appendChild(td6);
                     let td7 = document.createElement("button");
-                    td7.innerHTML="update";
+                    td7.innerHTML="wijzig klantprofiel";
                     td7.onclick=function() {
                         verander(td1.innerHTML);
                     };    
                     tr.appendChild(td7);
+                    let td8 = document.createElement("button");
+                    td8.innerHTML="verwijder klantprofiel"
+                    td8.onclick=function(){
+                        verwijder(td1.innerHTML);
+                    }
+                    tr.appendChild(td8);
                     table.appendChild(tr);
                 }
                 document.getElementById("resultaat").appendChild(table);
@@ -77,7 +83,11 @@
                     document.getElementById("resultaat").removeChild(document.getElementById("resultaat").children[0]);
                 }
                
-            }    
+            }
+            function inloggen(klantid){
+                window.location.href='indexklantbestelling.html' +'#'+klantid;
+            }
+
             function verwijder(klantid){
                 var xhr = new XMLHttpRequest();
                 xhr.onreadystatechange = function(){
@@ -96,13 +106,13 @@
         </script>
     </head>
     <body onload="lijstOpvragen()">
-        <h1>Customer main menu</h1>
+        <h1>Klant hoofdmenu</h1>
         <div id="resultaat"></div>
         <h5></h5>
 <!--         <input type="button" value="refresh customer list" onclick="lijstOpvragen()" > -->
-        <h5></h5>
+        <h5>nog geen klant?</h5>
         <form action="file:///C:/_Files/Multiteamgit/klant_toevoegen.html">
-            <input type="submit" value="add customer"/>
+            <input type="submit" value="word klant!"/>
         </form>
     </body>
 </html>

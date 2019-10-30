@@ -150,51 +150,51 @@
 <body onload="lijstOpvragen2()">
     <div class="row">
         <div class="col-sm-12" style="background-color:orange;">
-            <h1 align="center">change order</h1>
+            <h1 align="center">verander bestelling</h1>
         </div>
     </div>
-    <h5 align="center">select order:</h5>
+    <h5 align="center">kies bestelling:</h5>
     <form id="myform" align="center">
         <select id="selectnumber">
-            <option>first refresh dropdown</option>
+            <option></option>
         </select>
     </form>
-    <h5 align="center">what do you want to change in your order:</h5>
+    <h5 align="center">wat wil je veranderen</h5>
     <h5></h5>
     <form align="center">
         <select id="typechange">
             <option></option>
-            <option value="amount">amount</option>
-            <option value="products">products</option>
-            <option value="amount and products">amount and products</option>
+            <option value="amount">hoeveelheid</option>
+            <option value="products">producten</option>
+            <option value="amount and products">hoeveelheid en producten</option>
         </select>
     </form>
 
-    <h5 align="center">change amount (optional):</h5>
+    <h5 align="center">vul nieuwe hoeveelheid in (optioneel):</h5>
     <div align="center">
             <input type=text id="newamount">
     </div>
-    <h5 align="center">change products (optional):</h5>
+    <h5 align="center">verander producten (optioneell):</h5>
     <form align ="center" id="myform">
         <select id="selectnumber2">
-            <option>first refresh dropdown</option>
+            <option></option>
         </select>
     </form>
     <h5></h5>
     <input hidden type="number" id="hiddenid">
     <div class="row" align="center">
             <div class="col-sm-3">
-                    <input type="button" onclick="lijstOpvragen2()" class="btn btn-success" value="refresh dropdown">
+                    <input type="button" onclick="lijstOpvragen2()" class="btn btn-success" value="ververs dropdown">
             </div>
             <div class="col-sm-3">
-                    <input type=button onclick="productselected()" class="btn btn-info" value="add product to order">
+                    <input type=button onclick="productselected()" class="btn btn-info" value="voeg product toe aan bestelling">
             </div>
             <div class="col-sm-3">
-                    <input type="button" onclick="veranderopvragen()" class= "btn btn-warning" value="save changed order">
+                    <input type="button" onclick="veranderopvragen()" class= "btn btn-warning" value="voer veranderingen door">
             </div>
             <div class="col-sm-3">
                     <form action="file:///C:/_Files/Multiteamgit/indexbestelling.html">
-                        <input type="submit" class ="btn btn-primary" value="back to order main menu" />
+                        <input type="submit" class ="btn btn-primary" value="terug naar bestelling hoofdmenu" />
                     </form>
             </div>
     </div>

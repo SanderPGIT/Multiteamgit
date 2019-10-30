@@ -1,0 +1,50 @@
+<html>
+
+<head>
+    <style>
+    </style>
+    <script >
+        var productid;
+        var urlafbeelding;
+        function productopvragen() {
+            var naamproduct = window.location.hash.substring(1);
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var handler = xhr.responseText;
+                    console.log(handler);
+                    var hetObject = JSON.parse(handler);
+                    console.log(hetObject);
+                    productid = hetObject.id;
+                    urlafbeelding="http://localhost:8082/product/" + productid + "/image";
+                    console.log(urlafbeelding);
+                    laadurl();
+                    console.log(productid);
+                }
+            }
+            var urlproduct = "http://localhost:8082/product/zoeknaam?naamstring=" + naamproduct;
+            xhr.open("GET", urlproduct, true);
+            xhr.send();
+
+           
+
+        }
+
+        function laadurl(){
+            document.getElementById("jojo").action = urlafbeelding;
+            console.log("we zijn hier")
+        }
+
+    </script>
+
+</head>
+
+<body onload="productopvragen()">
+    <form method="POST" id="jojo" enctype="multipart/form-data">
+        Please select a file to upload : <input type="file" name="file" />
+        <input type="submit" value="upload" onclick=laadurl() />
+    </form>
+</body>
+
+
+</html>

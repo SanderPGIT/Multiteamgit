@@ -23,21 +23,22 @@
                 updateRequest.open("POST", "http://localhost:8082/klant",true);
                 updateRequest.setRequestHeader("Content-type", "application/json");
                 updateRequest.send(myJSONObject);
+				window.location.href="klantindex.html";
             }
 		</script>
 	</head>
 	<body>
-	<h1>Become our new customer!:</h1>
-	<h5>What is your full name:</h5>	
+	<h1>Welkom, meld je aan:</h1>
+	<h5>Geef je naam op:</h5>	
 	<input type=text id='naam'>
-	<h5>Please enter your address:</h5>
+	<h5>bezorgadres:</h5>
 	<input type=text id='adres'>
-	<h5>Please enter your postal code:</h5>
+	<h5>postcode:</h5>
 	<input type=text id='postcode'>
-	<h5>Please enter your residence:</h5>
+	<h5>woonplaats:</h5>
 	<input type=text id='woonplaats'>
 	<h5></h5>
-	<input type=button onclick=newCustomer() value="Sign up">
+	<input type=button onclick=newCustomer() value="aanmelden">
 	<h5></h5>
 	</body>
 </html>

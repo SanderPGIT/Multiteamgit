@@ -8,9 +8,9 @@
                 xhr.onreadystatechange = function(){
                     if(this.readyState == 4 && this.status == 200){
                     var handler = xhr.responseText;
-                    console.log(handler);
+                    //console.log(handler);
                     var hetObject = JSON.parse(handler);
-                    console.log(hetObject);
+                    //console.log(hetObject);
                     lijstMaken(hetObject);
                     }
                     }
@@ -45,7 +45,13 @@
                     let td3 = document.createElement("td");
                     td3.innerHTML=object[i].stock;
                     tr.appendChild(td3);
+                    let td4 = document.createElement("img");
+                    td4.src="data:image/png;base64," + object[i].datafoto;
+                    td4.height=150;
+                    td4.width=150;
+                    tr.appendChild(td4);
                     table.appendChild(tr);
+                    
                 }
                 document.getElementById("resultaat").appendChild(table);
                 if(document.getElementById("resultaat").children.length > 1){
@@ -58,24 +64,10 @@
            
         </script>
     </head>
-    <body onload="lijstOpvragen()">
-        <h1>product hoofdmenu</h1>
+    <body>
+        <h1>producten</h1>
+        <input type=button value="krijg producten" onclick="lijstOpvragen()">
         <div id="resultaat"></div>
-
-        <input type="button" value="ververs productenlijst" onclick="lijstOpvragen()" >
-        <h5></h5>
-        <form action="file:///C:/_Files/Multiteamgit/product_toevoegen.html">
-            <input type="submit" value="voeg product toe"/>
         </form>
-        <form action="file:///C:/_Files/Multiteamgit/product_verwijderen.html">
-            <input type="submit" value="verwijder producten"/>
-        </form>
-        <form action="file:///C:/_Files/Multiteamgit/product_aanpassen.html">
-            <input type="submit" value="pas producten aan"/>
-        </form>
-        <form action="file:///C:/_Files/Multiteamgit/index.html">
-            <input type="submit" value="terug naar homepage"/>
-        </form>
-
     </body>
 </html>
