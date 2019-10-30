@@ -4,6 +4,7 @@
         </style>
         <script>
             function lijstOpvragen(){
+                document.getElementById("lijstsuppliers").innerHTML=null;
                 var requestVar = new XMLHttpRequest();
                 requestVar.onreadystatechange=function(){
                     console.log("readystate is changed");
@@ -12,7 +13,8 @@
                     console.log(reactie);
 
                     var JSONObject = JSON.parse(reactie);
-                    console.log(JSONObject);                    
+                    console.log(JSONObject);
+                    tabelMaken(JSONObject);                    
                     
                     for(i=0;i<JSONObject.length;i++){
                         console.log(i);
@@ -23,6 +25,36 @@
                 }
                 requestVar.open("GET","http://localhost:8082/supplier",true);
                 requestVar.send();
+            }
+
+            function tabelMaken(object){
+                let table=document.createElement("table");
+                table.border=1;
+                table.id="dit is een tabel";
+                let tr=document.createElement("tr");
+                let td1=document.createElement("th");
+                td1.innerHTML="ID";
+                tr.appendChild(td1);
+                let td2 = document.createElement("th");
+                td2.innerHTML="Leverancier";
+                tr.appendChild(td2);
+                let td3 = document.createElement("th");
+                td3.innerHTML="Product";
+                tr.appendChild(td3);
+                table.appendChild(tr);
+                for(i=0;i<object.length;i++){
+                    let tr = document.createElement("tr");
+                    let td1 = document.createElement("td");
+                    td1.innerHTML= object[i].id;
+                    tr.appendChild(td1);
+                    let td2 = document.createElement("td");
+                    td2.innerHTML=object[i].name;
+                    tr.appendChild(td2);
+                    let td3 = document.createElement("td");
+                    td3.innerHTML=object[i].stock;
+                    tr.appendChild(td3);
+                    table.appendChild(tr);
+                }
             }
 
             function addSupplier(){
@@ -59,12 +91,13 @@
 
                 requestVar.open("DELETE",urlproduct,true);
                 requestVar.send();
+                document.getElementById("idverwijderen").value=null;
             }
 
             function pasSupplierAan(){
                 var requestVar = new XMLHttpRequest();
                 var object ={};
-                object.id= document.getElementById("veranderid").value
+                object.id= document.getElementById("veranderid").value;
                 object.name = document.getElementById("verandernaam").value;
                 object.productType= document.getElementById("verandertype").value;
                 console.log(object);
@@ -85,17 +118,25 @@
 
         </script>
     </head>
-    <body>
-        <input type="text" size="23" id="naamsupplier" placeholder="voer supplier in"><br>
-        <input type="text" size="23" id="typesupplier" placeholder="voer type in">
+    <body onload="lijstOpvragen()">
+        <h1>Leveranciers</h1>
+        <h2>Voeg een leverancier toe</h2>
+        <div id="lijstsuppliers"></div><br>
+        <input type="text" size="23" id="naamsupplier" placeholder="Voer leverancier in"><br>
+        <input type="text" size="23" id="typesupplier" placeholder="Voer type product in">
         <input type="button" id="addsupplier" value="Toevoegen" onclick="addSupplier()"><br>
-        <input type="button" value="Lijst opvragen" onclick="lijstOpvragen()">
-        <div id="lijstsuppliers"></div>
+        <input type="button" value="Lijst vernieuwen" onclick="lijstOpvragen()">
+        <h2>Verwijder een leverancier</h2>
         <input type="text" size="23" id="idverwijderen" placeholder="Voer ID in dat verwijderd wordt"><br>
         <input type="button" id="delsupplier", value="Verwijderen" onclick="delSupplier()"><br>
-        <input type="text" size="23" id="veranderid" placeholder="voer te veranderen id in" ><br>
-        <input type="text" size="23" id="verandernaam" placeholder="voer nieuwe supplier in"><br>
-        <input type="text" size="23" id="verandertype" placeholder="voer nieuwe type in">
-        <input type="button" id="aanpassen" onclick="pasSupplierAan()" value="Veranderen">
+        <h2>Pas een leverancier aan</h2>
+        <input type="text" size="23" id="veranderid" placeholder="Voer te veranderen id in" ><br>
+        <input type="text" size="23" id="verandernaam" placeholder="Voer nieuwe supplier in"><br>
+        <input type="text" size="23" id="verandertype" placeholder="Voer nieuwe type in">
+        <input type="button" id="aanpassen" onclick="pasSupplierAan()" value="Veranderen"><br><br>
+        <form action="C:\_Files\Multiteamgit\supplyOrder.html">
+            <input type="submit" value="Ga naar leveringen">
+        </form><br>
+        <input type="button" onclick="tabelMaken()" value="tabel maken">
     </body>
 </html>
