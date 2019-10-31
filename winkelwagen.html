@@ -1,0 +1,177 @@
+<html>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+<head>
+    <style>
+        .eerste {
+            background-color: green;
+        }
+    </style>
+    <script>
+        var klantid=window.location.hash.substring(1,2);
+        console.log(klantid);
+        function laadwinkelwagen() {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var handler = xhr.responseText;
+                    //console.log(handler);
+                    var hetObject = JSON.parse(handler);
+                    console.log(hetObject);
+                    rijMaken(hetObject);
+                }
+            }
+            xhr.open("GET", "http://localhost:8082/product", true);
+            xhr.send();
+        }
+        function rijMaken(object) {
+            var test1 = window.location.hash.substring(3);
+            console.log(test1);
+            var test2 = test1.replace(",", "");
+            console.log(test2);
+            let table = document.createElement("table");
+            table.border = 1;
+            table.id = "ditiseentabel";
+            let tr = document.createElement("tr");
+            let td1 = document.createElement("th");
+            td1.innerHTML = "id:";
+            tr.appendChild(td1);
+            let td2 = document.createElement("th");
+            td2.innerHTML = "naam:";
+            tr.appendChild(td2);
+            let td3 = document.createElement("th");
+            td3.innerHTML = "voorraad:";
+            tr.appendChild(td3);
+            table.appendChild(tr)
+            for (j = 0; j < test2.length; j++) {
+                for (i = 0; i < object.length; i++) {
+                    if (test2[j] == object[i].id) {
+                        let td0 = document.createElement("td");
+                        td0.innerHTML = j + 1;
+                        let tr = document.createElement("tr");
+                        let td1 = document.createElement("td");
+                        td1.innerHTML = object[i].id;
+                        tr.appendChild(td1);
+                        let td2 = document.createElement("td");
+                        td2.innerHTML = object[i].name;
+                        tr.appendChild(td2);
+                        let td3 = document.createElement("td");
+                        td3.innerHTML = object[i].stock;
+                        tr.appendChild(td3);
+                        let td4 = document.createElement("button");
+                        td4.innerHTML = "verwijder";
+                        td4.onclick = function () {
+                            verwijder(td0.innerHTML);
+                        }
+                        tr.appendChild(td4);
+                        table.appendChild(tr);
+                    }
+                    document.getElementById("resultaat").appendChild(table);
+                    console.log("wezijn hier");
+                    klantopvragen(klantid);
+                }
+            }
+        }
+
+        function verwijder(getal) {
+            document.getElementById("resultaat").children[0].deleteRow(getal);
+        }
+
+        var klantObject={};
+        function klantopvragen(idvanklant){
+            function laadwinkelwagen() {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var handler = xhr.responseText;
+                    //console.log(handler);
+                    klantObject = JSON.parse(handler);
+                    console.log(klantObject);
+                }
+            }
+            urlklant="http://localhost:8082/klant/"+idvanklant;
+            xhr.open("GET",urlklant , true);
+            xhr.send();
+        }
+        }
+
+        function bevestigorder() {
+            var lijst = document.getElementById("resultaat").children[0];
+            console.log(lijst.rows)
+            for (i = 1; i < lijst.rows.length; i++) {
+                console.log(lijst.rows[i].cells[0].innerHTML);
+                productselected(lijst.rows[i].cells[0].innerHTML);
+            }
+
+            alert("Je bestelling is bevestigd");
+        }
+
+        producten = [];
+        function productselected(idproduct) {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var handler = xhr.responseText;
+                    geparsed = JSON.parse(handler);
+                    producten.push(geparsed);
+                    console.log(producten);
+                    //document.getElementById("resultaat").innerHTML = "product: " + geparsed.name + " is added to order";
+                    document.getElementById("hiddenid").value = producten;
+
+                }
+            }
+            var urlproduct = "http://localhost:8082/product/" + idproduct;
+            xhr.open("GET", urlproduct, true);
+            xhr.send();
+        }
+
+        function neworder(){
+                var updateRequest = new XMLHttpRequest();
+                var inputaantal = document.getElementById("aantal").value;
+				var mijnObject = {}
+                mijnObject.aantal = inputaantal;
+                mijnObject.products = producten;
+				//console.log(mijnObject.aantal);
+				//console.log(mijnObject.products);
+                var myJSONObject = JSON.stringify(mijnObject);
+				console.log(myJSONObject);
+                alert("bedankt voor je bestelling, veel plezier met je aankoop")
+                updateRequest.onreadystatechange = function(){
+                    console.log("readystate = veranderd");
+                }
+                updateRequest.open("POST", "http://localhost:8082/bestelling",true);
+                updateRequest.setRequestHeader("Content-type", "application/json");
+                updateRequest.send(myJSONObject); 
+                window.location.href="index.html"
+            }
+
+    </script>
+</head>
+
+<body onload="laadwinkelwagen()">
+    <div class="row">
+        <div class="col-sm-12" style="background-color:lavender;">
+            <h1 align="center">Winkelwagen</h1>
+        </div>
+    </div>
+    <h5></h5>
+    <div id="resultaat" align="center"></div>
+    <h5></h5>
+    <h5 align="center">geen aantal eenheden op</h5>
+    <div align="center">
+        <input type=text id='aantal'>
+        <input type=button value="bevestig order" onclick="bevestigorder()">
+        <input type=button value="plaats order" onclick="neworder()">
+    </div>
+    <input hidden type ="number" id="hiddenid">
+
+</body>
+
+</html>
