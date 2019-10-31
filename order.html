@@ -1,0 +1,185 @@
+<html>
+    <head>
+        <style>
+            table, tr, td, th{
+                border: 2px solid black;
+                border-collapse:collapse;
+            }
+        </style>
+        <script>
+            function lijstOpvragen(){
+                var requestVar = new XMLHttpRequest();
+                requestVar.onreadystatechange=function(){
+                    console.log("readystate is changed");
+                    if(requestVar.readyState==4){
+                    var reactie = this.responseText;
+                    console.log(reactie);
+
+                    var JSONObject = JSON.parse(reactie);
+                    console.log(JSONObject);                    
+                    
+                    for(i=0;i<JSONObject.length;i++){
+                        console.log(i);
+                    }
+                    tabelMaken(JSONObject);
+                    }
+                    
+                }
+                requestVar.open("GET","http://localhost:8082/supplyOrder",true);
+                requestVar.send();
+            }
+
+            function tabelMaken(object){
+                let table = document.createElement("table");
+                table.id = "ditiseentabel";
+                let tr = document.createElement("tr");
+                let th1 = document.createElement("th");
+                th1.innerHTML= "ID";
+                tr.appendChild(th1);
+                let th2 = document.createElement("th");
+                th2.innerHTML="Product";
+                tr.appendChild(th2);
+                let th3 = document.createElement("th");
+                th3.innerHTML="Aantal";
+                tr.appendChild(th3);
+                let th4 = document.createElement("th");
+                th4.innerHTML="Geleverd";
+                tr.appendChild(th4);
+                let th5 = document.createElement("th");
+                th5.innerHTML="Annuleren";
+                tr.appendChild(th5);
+                table.appendChild(tr);
+                for(i=0;i<object.length;i++){
+                    let tr = document.createElement("tr");
+                    let td1 = document.createElement("td");
+                    td1.innerHTML= object[i].id;
+                    tr.appendChild(td1);
+                    let td2 = document.createElement("td");
+                    td2.innerHTML=object[i].supplier.productType;
+                    tr.appendChild(td2);
+                    let td3 = document.createElement("td");
+                    td3.innerHTML=object[i].amount;
+                    tr.appendChild(td3);
+                    let td4 = document.createElement("td");
+                    td4.innerHTML=object[i].delivered;
+                    tr.appendChild(td4);
+                    let td5 = document.createElement("button");
+                    td5.innerHTML="Annuleer";
+                    td5.onclick = function(){
+                        annuleerOrder(td1.innerHTML);
+                    };
+                    tr.appendChild(td5);                
+                    table.appendChild(tr);
+                }
+                document.getElementById("tabelProducten").appendChild(table);
+                if(document.getElementById("tabelProducten").children.length > 1){
+                    document.getElementById("tabelProducten").removeChild(document.getElementById("tabelProducten").children[0]);
+                }
+            }
+
+            function annuleerOrder(id){
+                console.log("order geannuleerd");
+            }
+
+            function verzendOrder(){
+                console.log("order wordt verzonden");
+                var xhr = new XMLHttpRequest();
+                var object= {};
+                object.amount= document.getElementById("invoerAantal").value;
+                object.delivered = false;
+                supplier = document.getElementById("dropdown").value;
+                console.log(object);
+                xhr.onreadystatechange = console.log("readystate is changed");
+                var myJSON = JSON.stringify(object);
+                console.log(myJSON);
+
+                var urlProduct="http://localhost:8082/supplyOrder/"+supplier;
+                console.log(urlProduct);
+                xhr.open("POST",urlProduct,true);
+                xhr.setRequestHeader("Content-type", "application/json");
+                xhr.send(myJSON);
+
+            }
+
+            function loadDropdown(){
+                var requestVar = new XMLHttpRequest();
+                requestVar.onreadystatechange=function(){
+                    console.log("readystate is changed");
+                    if(requestVar.readyState==4){
+                        var xhr = this.responseText;
+                        console.log(xhr);
+
+                        var JSONObject = JSON.parse(xhr);
+                        console.log(JSONObject);
+
+                        console.log("dropdown wordt geladen");
+                        var selectdd = document.getElementById("dropdown");
+                        for(i=0;i<JSONObject.length;i++){
+                            var para = document.createElement("option");
+                            para.innerHTML=JSONObject[i].name;
+                            para.value=JSONObject[i].id;
+                            selectdd.appendChild(para);
+                        }                                     
+                    }
+                }
+                requestVar.open("GET","http://localhost:8082/supplier",true);
+                requestVar.send();
+            }
+
+            function getProduct(){
+                var requestVar = new XMLHttpRequest();
+                requestVar.onreadystatechange=function(){
+                    console.log("readystate is changed");
+                    if(requestVar.readyState==4){
+                    var reactie = this.responseText;
+                    console.log(reactie);
+
+                    var JSONObject = JSON.parse(reactie);
+                    console.log(JSONObject);
+
+                    document.getElementById("naam").innerHTML="Product: "+JSONObject.name;
+                    document.getElementById("leverancier").innerHTML="Leverancier: ";
+                    document.getElementById("voorraad").innerHTML="Voorraad: "+JSONObject.stock;                  
+                    
+                    }
+                    
+                }
+                var url = new URL(window.location.href);
+                var getParam = url.searchParams.get("id");
+                console.log(getParam);
+                var urlProduct = "http://localhost:8082/order/"+getParam;
+                console.log(urlProduct);
+                requestVar.open("GET",urlProduct,true);
+                requestVar.send();
+            }
+
+            function printId(){
+                console.log("test")
+                var url= new URL(window.location.href);
+                var jojo=url.searchParams.get("id");
+                console.log(jojo);
+            }
+
+            function gaNaarStorage(){
+                window.location.href="storage.html";
+            }
+
+            
+        </script>
+    </head>
+    <body onload="getProduct(), loadDropdown(), lijstOpvragen()">
+        <h1>Bestellen</h1>
+        <div id="naam"></div>
+        <div id="leverancier"></div>
+        <div id="voorraad"></div><br>
+        <select id="dropdown" >
+            <option >kies een leveraar</option>
+        </select> <br>
+        <input type="text" id="invoerAantal" placeholder="Voer te bestellen aantal in"><br>
+        <input type="button" id="verzendOrder" value="Verzenden" onclick="verzendOrder()">
+        <br><br>
+        <h2>Openstaande bestellingen</h1>
+        <div id="tabelProducten"></div><br>
+        <input type="button" onclick="gaNaarStorage()" value="ga terug naar storage">
+    </body>
+</html>

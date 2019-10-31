@@ -1,0 +1,89 @@
+<html>
+    <head>
+        <style>
+            table, tr, td, th{
+                border: 2px solid black;
+                border-collapse:collapse;
+            }
+        </style>
+        <script>
+            function lijstOpvragen(){
+                document.getElementById("lijstProducten").innerHTML=null;
+                var requestVar = new XMLHttpRequest();
+                requestVar.onreadystatechange=function(){
+                    console.log("readystate is changed");
+                    if(requestVar.readyState==4){
+                    var reactie = this.responseText;
+                    console.log(reactie);
+
+                    var JSONObject = JSON.parse(reactie);
+                    console.log(JSONObject);
+                    tabelMaken(JSONObject);
+
+                    
+                    //for(i=0;i<JSONObject.length;i++){
+                    //    console.log(i);
+                    //    document.getElementById("lijstProducten").innerHTML += JSONObject[i].id + ", " + JSONObject[i].name +", " + JSONObject[i].stock + "<br>" ;
+                    //}
+                    }
+                    
+                }
+                requestVar.open("GET","http://localhost:8082/product",true);
+                requestVar.send();
+            }
+
+            function tabelMaken(object){
+                let table = document.createElement("table");
+                table.id = "ditiseentabel";
+                let tr = document.createElement("tr");
+                let td1 = document.createElement("th");
+                td1.innerHTML= "id";
+                tr.appendChild(td1);
+                let td2 = document.createElement("th");
+                td2.innerHTML="naam";
+                tr.appendChild(td2);
+                let td3 = document.createElement("th");
+                td3.innerHTML="voorraad";
+                tr.appendChild(td3);
+                let td4 = document.createElement("th");
+                td4.innerHTML="bestellen";
+                tr.appendChild(td4);
+                table.appendChild(tr);
+                for(i=0;i<object.length;i++){
+                    //var url = "/"+object[i].id+"/product";
+                    let tr = document.createElement("tr");
+                    let td1 = document.createElement("td");
+                    td1.innerHTML= object[i].id;
+                    tr.appendChild(td1);
+                    let td2 = document.createElement("td");
+                    td2.innerHTML=object[i].name;
+                    tr.appendChild(td2);
+                    let td3 = document.createElement("td");
+                    td3.innerHTML=object[i].stock;
+                    tr.appendChild(td3);
+                    let td4 = document.createElement("button");
+                    td4.innerHTML="bestel";
+                    td4.onclick = function(){
+                        var url="order.html?id="+td1.innerHTML;
+                        console.log(url);
+                        window.location.href=url;
+
+                    }
+                    tr.appendChild(td4);                
+                    table.appendChild(tr);
+                }
+                document.getElementById("tabelProducten").appendChild(table);
+                if(document.getElementById("tabelProducten").children.length > 1){
+                    document.getElementById("tabelProducten").removeChild(document.getElementById("tabelProducten").children[0]);
+                }
+            }
+
+
+        </script>
+    </head>
+    <body onload="lijstOpvragen()">
+        <h1 >Storage</h1>
+        <div id="lijstProducten"></div>
+        <div id="tabelProducten"></div>
+    </body>
+</html>
