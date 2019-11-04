@@ -1,44 +1,63 @@
 <html>
-	<head>
-		<style>
-		</style>
-		<script>
-			function newCustomer(){
-                var updateRequest = new XMLHttpRequest();
-                var inputNaam = document.getElementById("naam").value;
-                var inputadres = document.getElementById("adres").value;
-				var inputpostcode = document.getElementById("postcode").value;
-                var inputwoonplaats = document.getElementById("woonplaats").value;
-                var mijnObject = {};
-                mijnObject.naam = inputNaam;
-                mijnObject.adres = inputadres;
-				mijnObject.postcode= inputpostcode;
-				mijnObject.woonplaats = inputwoonplaats;
-				console.log(mijnObject);
-                var myJSONObject = JSON.stringify(mijnObject);
-				console.log(myJSONObject);
-                updateRequest.onreadystatechange = function(){
-                    console.log("readystate = veranderd");
-                }
-                updateRequest.open("POST", "http://localhost:8082/klant",true);
-                updateRequest.setRequestHeader("Content-type", "application/json");
-                updateRequest.send(myJSONObject);
-				window.location.href="klantindex.html";
-            }
-		</script>
-	</head>
-	<body>
-	<h1>Welkom, meld je aan:</h1>
-	<h5>Geef je naam op:</h5>	
-	<input type=text id='naam'>
-	<h5>bezorgadres:</h5>
-	<input type=text id='adres'>
-	<h5>postcode:</h5>
-	<input type=text id='postcode'>
-	<h5>woonplaats:</h5>
-	<input type=text id='woonplaats'>
-	<h5></h5>
-	<input type=button onclick=newCustomer() value="aanmelden">
-	<h5></h5>
-	</body>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+<head>
+	<style>
+	</style>
+	<script>
+		function newCustomer() {
+			var updateRequest = new XMLHttpRequest();
+			var inputNaam = document.getElementById("naam").value;
+			var inputadres = document.getElementById("adres").value;
+			var inputpostcode = document.getElementById("postcode").value;
+			var inputwoonplaats = document.getElementById("woonplaats").value;
+			var mijnObject = {};
+			mijnObject.naam = inputNaam;
+			mijnObject.adres = inputadres;
+			mijnObject.postcode = inputpostcode;
+			mijnObject.woonplaats = inputwoonplaats;
+			console.log(mijnObject);
+			var myJSONObject = JSON.stringify(mijnObject);
+			console.log(myJSONObject);
+			updateRequest.onreadystatechange = function () {
+				console.log("readystate = veranderd");
+			}
+			updateRequest.open("POST", "http://localhost:8082/klant", true);
+			updateRequest.setRequestHeader("Content-type", "application/json");
+			updateRequest.send(myJSONObject);
+			window.location.href = "klantindex.html";
+		}
+	</script>
+</head>
+
+<body>
+	<h1>Welkom bij onze webwinkel:</h1>
+	<div class="form-group col-sm-6">
+		<label>Naam:</label>
+		<input type=text class="form-control" id='naam'>
+	</div>
+	<div class="form-group col-sm-6">
+		<label>Straat:</label>
+		<input type=text class="form-control" size=50 id='adres'>
+	</div>
+	<div class="form-group col-sm-6">
+		<label>Postcode:</label>
+		<input type=text class="form-control" id='postcode'>
+	</div>
+	<div class="form-group col-sm-6">
+		<label>Woonplaats:</label>
+		<input type=text class="form-control" id='woonplaats'>
+	</div>
+	<div align=center>
+		<input type=button class="btn btn-success" onclick=newCustomer() value="aanmelden">
+	</div>
+</body>
+
 </html>
