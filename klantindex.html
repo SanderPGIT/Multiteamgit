@@ -1,118 +1,150 @@
 <html>
-    <head>
-        <style>
-        </style>
-        <script src=jquery-3.4.1.js></script>
-        <script>
-            function lijstOpvragen(){
-                var xhr=new XMLHttpRequest();
-                xhr.onreadystatechange = function(){
-                    if(this.readyState == 4 && this.status == 200){
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+<head>
+    <style>
+        .tablestyle{text-align: center;}
+        .eerste{ text-align: center; background-color: gray; color: blue; padding:150px;font-weight: bold;}
+        .restrij{ text-align: center;  background-color: gray; color: black; padding:150px;}
+    </style>
+    <script src=jquery-3.4.1.js></script>
+    <script>
+        function lijstOpvragen() {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
                     var handler = xhr.responseText;
                     console.log(handler);
                     var hetObject = JSON.parse(handler);
                     console.log(hetObject);
                     lijstMaken(hetObject);
-                    }
-                    }
-
-                xhr.open("GET","http://localhost:8082/klant",true);
-                xhr.send();
+                }
             }
 
-            function lijstMaken(object){
-                let table = document.createElement("table");
-                table.border= 1;
-                table.id = "ditiseentabel";
+            xhr.open("GET", "http://localhost:8082/klant", true);
+            xhr.send();
+        }
+
+        function lijstMaken(object) {
+            let table = document.createElement("table");
+            table.id = "ditiseentabel";
+            table.className="tablestlye";
+            let tr = document.createElement("tr");
+            tr.className="eerste";
+            //let td1 = document.createElement("td");
+            //td1.innerHTML = "id:";
+            //td1.width=25;
+            //tr.appendChild(td1);
+            let td2 = document.createElement("td");
+            td2.innerHTML = "naam:";
+            td2.width=100;
+            tr.appendChild(td2);
+            let td3 = document.createElement("td");
+            td3.innerHTML = "adres:";
+            td3.width=150;
+            tr.appendChild(td3);
+            let td4 = document.createElement("td");
+            td4.innerHTML = "postcode:";
+            td4.width=100;
+            tr.appendChild(td4);
+            let td5 = document.createElement("td");
+            td5.innerHTML = "woonplaats:";
+            td5.width=150;
+            tr.appendChild(td5);
+            let td6 = document.createElement("td");
+            td6.colSpan=3;
+            tr.appendChild(td6);
+            table.appendChild(tr);
+            for (i = 0; i < object.length; i++) {
                 let tr = document.createElement("tr");
-                let td1 = document.createElement("th");
-                td1.innerHTML= "id:";
-                tr.appendChild(td1);
-                let td2 = document.createElement("th");
-                td2.innerHTML="naam:";
+                tr.className="restrij";
+                let td1 = document.createElement("td");
+                td1.innerHTML = object[i].klantid;
+                //tr.appendChild(td1);
+                let td2 = document.createElement("td");
+                td2.innerHTML = object[i].naam;
                 tr.appendChild(td2);
-                let td3 = document.createElement("th");
-                td3.innerHTML="adres:";
+                let td3 = document.createElement("td");
+                td3.innerHTML = object[i].adres;
                 tr.appendChild(td3);
-                let td4 = document.createElement("th");
-                td4.innerHTML="postcode:";
+                let td4 = document.createElement("td");
+                td4.innerHTML = object[i].postcode;
                 tr.appendChild(td4);
-                let td5 = document.createElement("th");
-                td5.innerHTML="woonplaats:";
+                let td5 = document.createElement("td");
+
+                td5.innerHTML = object[i].woonplaats;
                 tr.appendChild(td5);
+                let td6 = document.createElement("button");
+                td6.className="btn btn-success btn sm"
+                td6.innerHTML = "log in";
+                td6.onclick = function () {
+                    inloggen(td1.innerHTML);
+                };
+                tr.appendChild(td6);
+                let td7 = document.createElement("button");
+                td7.className="btn btn-warning"
+                td7.innerHTML = "wijzig klantprofiel";
+                td7.onclick = function () {
+                    verander(td1.innerHTML);
+                };
+                tr.appendChild(td7);
+                let td8 = document.createElement("button");
+                td8.innerHTML = "verwijder klantprofiel";
+                td8.className="btn btn-danger"
+                td8.onclick = function () {
+                    verwijder(td1.innerHTML);
+                }
+                tr.appendChild(td8);
                 table.appendChild(tr);
-                for(i=0;i<object.length;i++){
-                    let tr = document.createElement("tr");
-                    let td1 = document.createElement("td");
-                    td1.innerHTML= object[i].klantid;
-                    tr.appendChild(td1);
-                    let td2 = document.createElement("td");
-                    td2.innerHTML=object[i].naam;
-                    tr.appendChild(td2);
-                    let td3 = document.createElement("td");
-                    td3.innerHTML=object[i].adres;
-                    tr.appendChild(td3);
-                    let td4 = document.createElement("td");
-                    td4.innerHTML=object[i].postcode;
-                    tr.appendChild(td4);
-                    let td5 = document.createElement("td");
-                    td5.innerHTML=object[i].woonplaats;
-                    tr.appendChild(td5);
-                    let td6 = document.createElement("button");
-                    td6.innerHTML="log in";
-                    td6.onclick= function(){
-                        inloggen(td1.innerHTML);
-                    };
-                    tr.appendChild(td6);
-                    let td7 = document.createElement("button");
-                    td7.innerHTML="wijzig klantprofiel";
-                    td7.onclick=function() {
-                        verander(td1.innerHTML);
-                    };    
-                    tr.appendChild(td7);
-                    let td8 = document.createElement("button");
-                    td8.innerHTML="verwijder klantprofiel"
-                    td8.onclick=function(){
-                        verwijder(td1.innerHTML);
-                    }
-                    tr.appendChild(td8);
-                    table.appendChild(tr);
-                }
-                document.getElementById("resultaat").appendChild(table);
-                if(document.getElementById("resultaat").children.length > 1){
-                    document.getElementById("resultaat").removeChild(document.getElementById("resultaat").children[0]);
-                }
-               
             }
-            function inloggen(klantid){
-                window.location.href='productafbeelding.html' +'#'+klantid;
+            document.getElementById("resultaat").appendChild(table);
+            if (document.getElementById("resultaat").children.length > 1) {
+                document.getElementById("resultaat").removeChild(document.getElementById("resultaat").children[0]);
             }
 
-            function verwijder(klantid){
-                var xhr = new XMLHttpRequest();
-                xhr.onreadystatechange = function(){
-                    console.log("readystate = veranderd");
-                    }
-                var urlproduct= "http://localhost:8082/klant/"+klantid;
-                xhr.open("DELETE", urlproduct,true);
-                xhr.send();
-                window.location.reload();
+        }
+        function inloggen(klantid) {
+            window.location.href = 'klanthomepage.html' + '#' + klantid;
+        }
 
+        function verwijder(klantid) {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                console.log("readystate = veranderd");
             }
+            var urlproduct = "http://localhost:8082/klant/" + klantid;
+            xhr.open("DELETE", urlproduct, true);
+            xhr.send();
+            window.location.reload();
 
-            function verander(iets){
-                window.location.href= 'klant_aanpassen.html' + '#'+ iets; 
-            }
-        </script>
-    </head>
-    <body onload="lijstOpvragen()">
-        <h1>Klant hoofdmenu</h1>
-        <div id="resultaat"></div>
-        <h5></h5>
-<!--         <input type="button" value="refresh customer list" onclick="lijstOpvragen()" > -->
-        <h5>nog geen klant?</h5>
-        <form action="file:///C:/_Files/Multiteamgit/klant_toevoegen.html">
-            <input type="submit" value="word klant!"/>
-        </form>
-    </body>
+        }
+
+        function verander(iets) {
+            window.location.href = 'klant_aanpassen.html' + '#' + iets;
+        }
+    </script>
+</head>
+
+<body onload="lijstOpvragen()">
+        <div class="row">
+                <div class="col-sm-10" align="center">
+                       <h1>Klant hoofdmenu</h1>
+                </div>
+                <div class="col-sm-2">
+                        <form action="file:///C:/_Files/Multiteamgit/klant_toevoegen.html">
+                            <input type="submit" class= "btn btn-primary" value="nog geen klant?" />
+                        </form>
+                </div>
+
+        </div>
+    <div align=center id="resultaat"></div>
+</body>
+
 </html>

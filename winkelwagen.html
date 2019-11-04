@@ -74,8 +74,6 @@
                         table.appendChild(tr);
                     }
                     document.getElementById("resultaat").appendChild(table);
-                    console.log("wezijn hier");
-                    klantopvragen(klantid);
                 }
             }
         }
@@ -86,7 +84,7 @@
 
         var klantObject={};
         function klantopvragen(idvanklant){
-            function laadwinkelwagen() {
+            console.log("in klant opvragen");
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
@@ -100,14 +98,16 @@
             xhr.open("GET",urlklant , true);
             xhr.send();
         }
-        }
+        
 
         function bevestigorder() {
             var lijst = document.getElementById("resultaat").children[0];
-            console.log(lijst.rows)
+            klantopvragen(klantid);
+            //console.log(lijst.rows)
             for (i = 1; i < lijst.rows.length; i++) {
-                console.log(lijst.rows[i].cells[0].innerHTML);
+                //console.log(lijst.rows[i].cells[0].innerHTML);
                 productselected(lijst.rows[i].cells[0].innerHTML);
+               
             }
 
             alert("Je bestelling is bevestigd");
@@ -138,6 +138,7 @@
 				var mijnObject = {}
                 mijnObject.aantal = inputaantal;
                 mijnObject.products = producten;
+                mijnObject.deklant= klantObject;
 				//console.log(mijnObject.aantal);
 				//console.log(mijnObject.products);
                 var myJSONObject = JSON.stringify(mijnObject);
@@ -149,7 +150,7 @@
                 updateRequest.open("POST", "http://localhost:8082/bestelling",true);
                 updateRequest.setRequestHeader("Content-type", "application/json");
                 updateRequest.send(myJSONObject); 
-                window.location.href="index.html"
+                window.location.href="klanthomepage.html"+"#"+klantid; 
             }
 
     </script>
