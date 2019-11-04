@@ -29,7 +29,7 @@
                 requestVar.send();
             }
 
-            function tabelMaken(object){
+            function tabelMaken(objectS){
                 let table = document.createElement("table");
                 table.id = "ditiseentabel";
                 let tr = document.createElement("tr");
@@ -39,36 +39,56 @@
                 let th2 = document.createElement("th");
                 th2.innerHTML="Product";
                 tr.appendChild(th2);
-                let th3 = document.createElement("th");
-                th3.innerHTML="Aantal";
+                let th3= document.createElement("th");
+                th3.innerHTML="Leverancier";
                 tr.appendChild(th3);
                 let th4 = document.createElement("th");
-                th4.innerHTML="Geleverd";
+                th4.innerHTML="Aantal";
                 tr.appendChild(th4);
                 let th5 = document.createElement("th");
-                th5.innerHTML="Annuleren";
+                th5.innerHTML="Geleverd";
                 tr.appendChild(th5);
+                let th6 = document.createElement("th");
+                th6.innerHTML="Annuleren/Verwerken";
+                tr.appendChild(th6);
                 table.appendChild(tr);
-                for(i=0;i<object.length;i++){
+                for(i=0;i<objectS.length;i++){
+                    console.log(objectS[i]);
+                    var suppId = objectS[i].supplier.id;
+                    var geleverd = objectS[i].delivered;
+                    var orderId = objectS[i].id;
+                    console.log(suppId+" "+geleverd + " " + orderId);
                     let tr = document.createElement("tr");
                     let td1 = document.createElement("td");
-                    td1.innerHTML= object[i].id;
+                    td1.innerHTML= objectS[i].id;
                     tr.appendChild(td1);
                     let td2 = document.createElement("td");
-                    td2.innerHTML=object[i].supplier.productType;
+                    td2.innerHTML=objectS[i].product.name;
                     tr.appendChild(td2);
                     let td3 = document.createElement("td");
-                    td3.innerHTML=object[i].amount;
+                    td3.innerHTML=(objectS[i].supplier.name);
                     tr.appendChild(td3);
                     let td4 = document.createElement("td");
-                    td4.innerHTML=object[i].delivered;
+                    td4.innerHTML=objectS[i].amount;
                     tr.appendChild(td4);
-                    let td5 = document.createElement("button");
-                    td5.innerHTML="Annuleer";
-                    td5.onclick = function(){
+                    let td5 = document.createElement("td");
+                    td5.value=objectS[i].delivered;
+                    td5.innerHTML=td5.value;
+                    tr.appendChild(td5);
+                    let btn1 = document.createElement("button");
+                    btn1.innerHTML="Annuleer";
+                    btn1.onclick = function(){
                         annuleerOrder(td1.innerHTML);
                     };
-                    tr.appendChild(td5);                
+                    tr.appendChild(btn1);
+                    let td6 = document.createElement("td");
+                    tr.appendChild(td6);
+                    let btn2 = document.createElement("button");
+                    btn2.innerHTML = "Verwerken"+orderId;
+                    btn2.onclick = function(){
+                        verwerkOrder(suppId, geleverd, orderId);
+                    };
+                    tr.appendChild(btn2);                
                     table.appendChild(tr);
                 }
                 document.getElementById("tabelProducten").appendChild(table);
@@ -79,6 +99,17 @@
 
             function annuleerOrder(id){
                 console.log("order geannuleerd");
+                console.log(id);
+                var url = "http://localhost:8082/supplyOrder/"+id;
+                console.log(url);
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function(){
+                    console.log("readystate has changed");
+                }
+                
+                xhr.open("DELETE",url,true);
+                xhr.send();
+                window.location.href=window.location.href;
             }
 
             function verzendOrder(){
@@ -86,19 +117,46 @@
                 var xhr = new XMLHttpRequest();
                 var object= {};
                 object.amount= document.getElementById("invoerAantal").value;
-                object.delivered = false;
+                object.delivered;
                 supplier = document.getElementById("dropdown").value;
-                console.log(object);
+                product = mijnProduct.id;
+                console.log(product);
                 xhr.onreadystatechange = console.log("readystate is changed");
                 var myJSON = JSON.stringify(object);
                 console.log(myJSON);
 
-                var urlProduct="http://localhost:8082/supplyOrder/"+supplier;
+                var urlProduct="http://localhost:8082/supplyOrder/"+supplier+"/"+product;
                 console.log(urlProduct);
                 xhr.open("POST",urlProduct,true);
                 xhr.setRequestHeader("Content-type", "application/json");
                 xhr.send(myJSON);
+            }
 
+            function verwerkOrder(suppId, geleverd, orderId){
+                console.log("^^"+suppId);
+                console.log("^^"+geleverd);
+                console.log("^^"+orderId);
+                if(geleverd==true){
+                    alert("deze bestelling is al geleverd!");
+                }else{
+                    var xhr = new XMLHttpRequest();
+                    var object ={};
+                    object.id = orderId;
+                    object.delivered=true;
+                    console.log(object+"+++");
+                    xhr.onreadystatechange= function(){
+                        console.log("readystate = changed");
+                    }
+                    var myJSON = JSON.stringify(object);
+                    console.log(myJSON);
+                    var leverancierId= suppId;
+                    var productId = mijnProduct.id;
+                    var urlproduct = "http://localhost:8082/supplyOrder/"+leverancierId+"/"+productId;
+                    xhr.open("PUT",urlproduct,true);
+                    xhr.setRequestHeader("Content-type", "application/json");
+                    xhr.send(myJSON);                    
+                }
+                
             }
 
             function loadDropdown(){
@@ -126,6 +184,8 @@
                 requestVar.send();
             }
 
+            mijnProduct = {}
+
             function getProduct(){
                 var requestVar = new XMLHttpRequest();
                 requestVar.onreadystatechange=function(){
@@ -134,6 +194,8 @@
                     var reactie = this.responseText;
                     console.log(reactie);
 
+                    mijnProduct = JSON.parse(reactie);
+                    console.log(mijnProduct);
                     var JSONObject = JSON.parse(reactie);
                     console.log(JSONObject);
 
@@ -153,16 +215,10 @@
                 requestVar.send();
             }
 
-            function printId(){
-                console.log("test")
-                var url= new URL(window.location.href);
-                var jojo=url.searchParams.get("id");
-                console.log(jojo);
-            }
-
             function gaNaarStorage(){
                 window.location.href="storage.html";
             }
+
 
             
         </script>
