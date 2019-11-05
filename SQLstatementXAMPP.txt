@@ -1,0 +1,3 @@
+SELECT  bestellingid, deklant_klantid
+FROM Bestelling
+INNER_JOIN klant ON klant.klantid = bestelling.deklant_klantid

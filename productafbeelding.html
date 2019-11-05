@@ -23,33 +23,29 @@
                 let table = document.createElement("table");
                 table.border= 1;
                 table.id = "ditiseentabel";
-                let tr = document.createElement("tr");
-                let td1 = document.createElement("th");
-                td1.innerHTML= "id:";
-                tr.appendChild(td1);
-                let td2 = document.createElement("th");
-                td2.innerHTML="naam:";
-                tr.appendChild(td2);
-                let td3 = document.createElement("th");
-                td3.innerHTML="voorraad:";
-                tr.appendChild(td3);
-                table.appendChild(tr);
                 for(i=0;i<object.length;i++){
-                    let tr = document.createElement("tr");
-                    let td1 = document.createElement("td");
-                    td1.innerHTML= object[i].id;
-                    tr.appendChild(td1);
-                    let td2 = document.createElement("td");
-                    td2.innerHTML=object[i].name;
-                    tr.appendChild(td2);
-                    let td3 = document.createElement("td");
-                    td3.innerHTML=object[i].stock;
-                    tr.appendChild(td3);
+                    let tr2 = document.createElement("tr");
                     let td4 = document.createElement("img");
                     td4.src="data:image/png;base64," + object[i].datafoto;
                     td4.height=150;
                     td4.width=150;
-                    tr.appendChild(td4);
+                    tr2.appendChild(td4);
+                    table.appendChild(tr2);
+                    let tr = document.createElement("tr");
+                    let td1 = document.createElement("td");
+                    td1.innerHTML= object[i].name;
+                    tr.appendChild(td1);
+                    let td2 = document.createElement("td");
+                    td2.innerHTML="voorraad: "+ object[i].stock;
+                    tr.appendChild(td2);
+                    let td5 = document.createElement("td");
+                    td5.innerHTML=object[i].id;
+                    let td6 = document.createElement("button");
+                    td6.innerHTML="bestel";
+                    td6.onclick= function(){
+                        toevoegen(td5.innerHTML, td1.innerHTML);
+                    }
+                    tr.appendChild(td6);
                     table.appendChild(tr);
                     
                 }
@@ -58,16 +54,31 @@
                     document.getElementById("resultaat").removeChild(document.getElementById("resultaat").children[0]);
                 }
             }
+            productidbesteld=[];
+            productnaambesteld=[];
+            function toevoegen(idproduct, naamproduct){
+                alert("product toegevoegd aan bestelling");
+                productidbesteld.push(idproduct);
+                productnaambesteld.push(naamproduct);
+                console.log(productidbesteld);
+                document.getElementById("bestelling").innerHTML=productnaambesteld;
+            }
 
-            
+            function naarorder(){
+                window.location.href= "winkelwagen.html"+ "#"+ klantid +"#"+productidbesteld;
+            }
 
+            var klantid=window.location.hash.substring(1);
+            console.log(klantid);
            
         </script>
     </head>
-    <body>
-        <h1>producten</h1>
-        <input type=button value="krijg producten" onclick="lijstOpvragen()">
+    <body onload="lijstOpvragen()">
+        <h1>Welkom, selecteer producten naar keuze</h1>
         <div id="resultaat"></div>
-        </form>
+        <h5>bestelde producten:</h5>
+        <div id="bestelling"></div>
+        <h5></h5>
+        <input type=button value ="naar winkelwagen" onclick="naarorder()">
     </body>
 </html>

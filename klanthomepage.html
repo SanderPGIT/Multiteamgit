@@ -1,0 +1,130 @@
+<html>
+
+<head>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <style>
+        .tablestyle {
+            text-align: center;
+        }
+    </style>
+    <script src=jquery-3.4.1.js></script>
+    <script>
+        klantid = window.location.hash.substring(1);
+        console.log(klantid);
+        function bestellen() {
+
+            window.location.href = 'productafbeelding.html' + '#' + klantid;
+        }
+
+        function lijstOpvragen() {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var handler = xhr.responseText;
+                    //console.log(handler);
+                    hetobject = JSON.parse(handler);
+                    //console.log(hetobject);
+                    lijstmaken(hetobject);
+                }
+            }
+            var urlproduct = "http://localhost:8082/bestelling/klant/" + klantid;
+            xhr.open("GET", urlproduct, true);
+            xhr.send();
+            //window.location.reload();
+        }
+
+        function lijstmaken(objectje) {
+            console.log("wezienhier");
+            let table = document.createElement("table");
+            table.id = "ditiseentabel";
+            console.log(objectje);
+            console.log(objectje.length);
+            for (i = 0; i < objectje.length; i++) {
+                let tr0 = document.createElement("tr");
+                let td0 = document.createElement("th");
+                td0.innerHTML = "bestelling " + (i + 1);
+                td0.colSpan = 3;
+                tr0.appendChild(td0);
+                table.appendChild(tr0);
+                let tr2 = document.createElement("tr");
+                let tr3 = document.createElement("tr");
+                for (j = 0; j < objectje[i].products.length; j++) {
+                    let tr = document.createElement("tr");
+                    let td1 = document.createElement("td");
+                    td1.innerHTML = objectje[i].products[j].name;
+                    tr3.appendChild(td1);
+                    table.appendChild(tr3);
+                    let td4 = document.createElement("img");
+                    td4.src = "data:image/png;base64," + objectje[i].products[j].datafoto;
+                    td4.height = 150;
+                    td4.width = 150;
+                    tr2.appendChild(td4);
+                    table.appendChild(td4);
+                    
+                }
+                let td00 = document.createElement("td");
+                td00.innerHTML=objectje[i].id;
+                let tr4 = document.createElement("tr");
+                let td2 = document.createElement("td");
+                td2.colSpan = 4;
+                td2.innerHTML = "aantal: " + objectje[i].aantal;
+                tr4.appendChild(td2);
+                let td6 = document.createElement("button");
+                td6.className="btn btn-warning btn sm"
+                td6.innerHTML = "verwijder";
+                td6.onclick = function () {
+                    verwijder(td00.innerHTML);
+                };
+                tr4.appendChild(td6);
+                table.appendChild(tr4);
+            }
+            document.getElementById("resultaat").appendChild(table);
+            if (document.getElementById("resultaat").children.length > 1) {
+                document.getElementById("resultaat").removeChild(document.getElementById("resultaat").children[0]);
+            }
+        }
+
+        function verwijder(bestellingid) {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                console.log("readystate = veranderd");
+            }
+            var urlproduct = "http://localhost:8082/bestelling/" + bestellingid;
+            xhr.open("DELETE", urlproduct, true);
+            xhr.send();
+            window.location.reload();
+        }
+    </script>
+</head>
+
+<body onload="lijstOpvragen()">
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand">Welkom terug</a>
+            </div>
+            <ul class="nav navbar-nav navbar-right"  >
+                <a href="#" class="btn btn-success btn-sm"  onclick="bestellen()">
+                    <span class="glyphicon glyphicon-shopping-cart"></span>nieuwe bestelling
+                </a>
+                <a href="#" class="btn btn-info btn-sm" onclick="uitloggen()">
+                    <span class="glyphicon glyphicon-log-out"></span> uitloggen
+                </a>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="row" align="center">
+        <h1><u>Mijn bestellingen</u></h1>
+    </div>
+    <div align="center" id="resultaat"></div>
+</body>
+
+</html>

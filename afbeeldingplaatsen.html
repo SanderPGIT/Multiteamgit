@@ -15,7 +15,7 @@
                     console.log(handler);
                     var hetObject = JSON.parse(handler);
                     console.log(hetObject);
-                    productid = hetObject.id;
+                    productid = hetObject[0].id;
                     urlafbeelding="http://localhost:8082/product/" + productid + "/image";
                     console.log(urlafbeelding);
                     laadurl();
