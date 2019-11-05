@@ -126,7 +126,7 @@
                 var myJSON = JSON.stringify(object);
                 console.log(myJSON);
 
-                var urlProduct="http://localhost:8082/supplyOrder/"+supplier+"/"+product;
+                var urlProduct="http://localhost:8082/supplyOrder/"+supplier+"/product?productId="+product;
                 console.log(urlProduct);
                 xhr.open("POST",urlProduct,true);
                 xhr.setRequestHeader("Content-type", "application/json");
@@ -201,9 +201,9 @@
                     console.log(JSONObject);
 
                     document.getElementById("naam").innerHTML="Product: "+JSONObject.name;
-                    document.getElementById("leverancier").innerHTML="Leverancier: ";
-                    document.getElementById("voorraad").innerHTML="Voorraad: "+JSONObject.stock;                  
-                    
+                    document.getElementById("leverancier").innerHTML="Leverancier: "+JSONObject.supplier.name;
+                    document.getElementById("voorraad").innerHTML="Voorraad: "+JSONObject.stock;
+                    console.log(JSONObject.Supplier);                 
                     }
                     
                 }
@@ -218,6 +218,10 @@
 
             function gaNaarStorage(){
                 window.location.href="storage.html";
+            }
+
+            function goHome(){
+                window.location.href="index.html";
             }
 
 
@@ -238,5 +242,7 @@
         <h2>Openstaande bestellingen</h1>
         <div id="tabelProducten"></div><br>
         <input type="button" onclick="gaNaarStorage()" value="ga terug naar storage">
+        <br><br>
+        <input type="button" onclick="goHome()" value="Home">
     </body>
 </html>
