@@ -41,11 +41,11 @@
         }
 
         function lijstmaken(objectje) {
-            console.log("wezienhier");
+            //console.log("wezienhier");
             let table = document.createElement("table");
             table.id = "ditiseentabel";
-            console.log(objectje);
-            console.log(objectje.length);
+            //console.log(objectje);
+            //console.log(objectje.length);
             for (i = 0; i < objectje.length; i++) {
                 let tr0 = document.createElement("tr");
                 let td0 = document.createElement("th");
@@ -53,20 +53,19 @@
                 td0.colSpan = 3;
                 tr0.appendChild(td0);
                 table.appendChild(tr0);
-                let tr2 = document.createElement("tr");
-                let tr3 = document.createElement("tr");
                 for (j = 0; j < objectje[i].products.length; j++) {
-                    let tr = document.createElement("tr");
+                    let tr2 = document.createElement("tr");
                     let td1 = document.createElement("td");
                     td1.innerHTML = objectje[i].products[j].name;
-                    tr3.appendChild(td1);
-                    table.appendChild(tr3);
+                    tr2.appendChild(td1);
+                    table.appendChild(tr2);
+                    let tr3 = document.createElement("tr");
                     let td4 = document.createElement("img");
                     td4.src = "data:image/png;base64," + objectje[i].products[j].datafoto;
                     td4.height = 150;
                     td4.width = 150;
-                    tr2.appendChild(td4);
-                    table.appendChild(td4);
+                    tr3.appendChild(td4);
+                    table.appendChild(tr3);
                     
                 }
                 let td00 = document.createElement("td");
@@ -78,7 +77,7 @@
                 tr4.appendChild(td2);
                 let td6 = document.createElement("button");
                 td6.className="btn btn-warning btn sm"
-                td6.innerHTML = "verwijder";
+                td6.innerHTML = "&#9938 verwijder";
                 td6.onclick = function () {
                     verwijder(td00.innerHTML);
                 };
@@ -100,6 +99,10 @@
             xhr.open("DELETE", urlproduct, true);
             xhr.send();
             window.location.reload();
+        }
+
+        function uitloggen(){
+            window.location.href="index.html";
         }
     </script>
 </head>
