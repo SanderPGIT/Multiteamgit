@@ -1,84 +1,160 @@
 <html>
-    <head>
-        <style>
-        </style>
-        <script>
-            function lijstOpvragen(){
-                var xhr=new XMLHttpRequest();
-                xhr.onreadystatechange = function(){
-                    if(this.readyState == 4 && this.status == 200){
+
+<head>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <style>
+        .sidenav {
+            /* Full-height: remove this if you want "auto" height */
+            width: 150px;
+            /* Set the width of the sidebar */
+            position: fixed;
+            /* Fixed Sidebar (stay in place on scroll) */
+            z-index: 1;
+            /* Stay on top */
+            top: 150;
+            /* Stay at the top */
+            left: 0;
+            background-color: lightgray;
+            /* Black */
+            overflow-x: hidden;
+            /* Disable horizontal scroll */
+            padding-bottom: 200px;
+        }
+
+        .sidenav .closebtn {
+            position: absolute;
+            top: 1px;
+            right: 1px;
+            font-size: 36px;
+            margin-left: 1px;
+        }
+    </style>
+    <script>
+        function lijstOpvragen() {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
                     var handler = xhr.responseText;
                     //console.log(handler);
                     var hetObject = JSON.parse(handler);
                     //console.log(hetObject);
                     lijstMaken(hetObject);
-                    }
-                    }
-
-                xhr.open("GET","http://localhost:8082/product",true);
-                xhr.send();
-            }
-
-            function lijstMaken(object){
-                let table = document.createElement("table");
-                table.border= 1;
-                table.id = "ditiseentabel";
-                for(i=0;i<object.length;i++){
-                    let tr2 = document.createElement("tr");
-                    let td4 = document.createElement("img");
-                    td4.src="data:image/png;base64," + object[i].datafoto;
-                    td4.height=150;
-                    td4.width=150;
-                    tr2.appendChild(td4);
-                    table.appendChild(tr2);
-                    let tr = document.createElement("tr");
-                    let td1 = document.createElement("td");
-                    td1.innerHTML= object[i].name;
-                    tr.appendChild(td1);
-                    let td2 = document.createElement("td");
-                    td2.innerHTML="voorraad: "+ object[i].stock;
-                    tr.appendChild(td2);
-                    let td5 = document.createElement("td");
-                    td5.innerHTML=object[i].id;
-                    let td6 = document.createElement("button");
-                    td6.innerHTML="bestel";
-                    td6.onclick= function(){
-                        toevoegen(td5.innerHTML, td1.innerHTML);
-                    }
-                    tr.appendChild(td6);
-                    table.appendChild(tr);
-                    
-                }
-                document.getElementById("resultaat").appendChild(table);
-                if(document.getElementById("resultaat").children.length > 1){
-                    document.getElementById("resultaat").removeChild(document.getElementById("resultaat").children[0]);
                 }
             }
-            productidbesteld=[];
-            productnaambesteld=[];
-            function toevoegen(idproduct, naamproduct){
-                alert("product toegevoegd aan bestelling");
-                productidbesteld.push(idproduct);
-                productnaambesteld.push(naamproduct);
-                console.log(productidbesteld);
-                document.getElementById("bestelling").innerHTML=productnaambesteld;
-            }
 
-            function naarorder(){
-                window.location.href= "winkelwagen.html"+ "#"+ klantid +"#"+productidbesteld;
-            }
+            xhr.open("GET", "http://localhost:8082/product", true);
+            xhr.send();
+        }
 
-            var klantid=window.location.hash.substring(1);
-            console.log(klantid);
-           
-        </script>
-    </head>
-    <body onload="lijstOpvragen()">
-        <h1>Welkom, selecteer producten naar keuze</h1>
-        <div id="resultaat"></div>
-        <h5>bestelde producten:</h5>
+        function lijstMaken(object) {
+            let table = document.createElement("table");
+            table.id = "ditiseentabel";
+            for (i = 0; i < object.length; i++) {
+                let tr2 = document.createElement("tr");
+                let td00 = document.createElement("td");
+                tr2.appendChild(td00);
+                let td4 = document.createElement("img");
+                td4.src = "data:image/png;base64," + object[i].datafoto;
+                td4.height = 150;
+                td4.width = 150;
+                tr2.appendChild(td4);
+                table.appendChild(tr2);
+                let tr = document.createElement("tr");
+                let td1 = document.createElement("td");
+                td1.innerHTML = object[i].name;
+                tr.appendChild(td1);
+                let td2 = document.createElement("td");
+                td2.innerHTML = "voorraad: " + object[i].stock;
+                tr.appendChild(td2);
+                let td5 = document.createElement("td");
+                td5.innerHTML = object[i].id;
+                let td6 = document.createElement("button");
+                td6.className = "btn btn-primary btn sm"
+                td6.innerHTML = "&#9745 bestel";
+                td6.onclick = function () {
+                    toevoegen(td5.innerHTML, td1.innerHTML);
+                }
+                tr.appendChild(td6);
+                table.appendChild(tr);
+
+            }
+            document.getElementById("resultaat").appendChild(table);
+            if (document.getElementById("resultaat").children.length > 1) {
+                document.getElementById("resultaat").removeChild(document.getElementById("resultaat").children[0]);
+            }
+        }
+        productidbesteld = [];
+        productnaambesteld = [];
+        function toevoegen(idproduct, naamproduct) {
+            productidbesteld.push(idproduct);
+            productnaambesteld.push(naamproduct);
+            console.log(productidbesteld);
+            document.getElementById("bestelling").innerHTML = productnaambesteld;
+        }
+
+        function naarorder() {
+            window.location.href = "winkelwagen.html" + "#" + klantid + "#" + productidbesteld;
+        }
+
+        function annulatie() {
+            window.location.href = "klanthomepage.html" + "#" + klantid;
+        }
+
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "150px";
+        }
+
+        /* Set the width of the side navigation to 0 */
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+        }
+
+        var klantid = window.location.hash.substring(1);
+        console.log(klantid);
+
+    </script>
+</head>
+
+<body onload="lijstOpvragen()">
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a>Winkelwagen:</a>
         <div id="bestelling"></div>
-        <h5></h5>
-        <input type=button value ="naar winkelwagen" onclick="naarorder()">
-    </body>
+    </div>
+
+    <div class="main">
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand">selecteer producten naar keuze</a>
+                </div>
+                <ul class="nav navbar-nav navbar-right">
+                    <a href="#" class="btn btn-primary btn-sm" onclick="openNav()">
+                        <span onclick="openNav()"></span>bekijk winkelwagen
+                    </a>
+                    <a href="#" class="btn btn-success btn-sm" onclick="naarorder()">
+                        <span class="glyphicon glyphicon-shopping-cart"></span>naar winkelwagen
+                    </a>
+                    <a href="#" class="btn btn-danger btn-sm" onclick="annulatie()">
+                        <span class="glyphicon glyphicon-remove"></span> annuleren
+                    </a>
+                </ul>
+            </div>
+        </nav>
+        <div id="resultaat" align="center"></div>
+    </div>
+
+
+
+
+
+</body>
+
 </html>

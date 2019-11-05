@@ -27,7 +27,9 @@
 			var myJSONObject = JSON.stringify(mijnObject);
 			console.log(myJSONObject);
 			updateRequest.onreadystatechange = function () {
+				if(this.readyState == 4 && this.status == 200){
 				console.log("readystate = veranderd");
+				}
 			}
 			updateRequest.open("POST", "http://localhost:8082/klant", true);
 			updateRequest.setRequestHeader("Content-type", "application/json");

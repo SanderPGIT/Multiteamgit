@@ -43,19 +43,19 @@
             //td1.width=25;
             //tr.appendChild(td1);
             let td2 = document.createElement("td");
-            td2.innerHTML = "naam:";
+            td2.innerHTML = "Naam:";
             td2.width=100;
             tr.appendChild(td2);
             let td3 = document.createElement("td");
-            td3.innerHTML = "adres:";
+            td3.innerHTML = "Adres:";
             td3.width=150;
             tr.appendChild(td3);
             let td4 = document.createElement("td");
-            td4.innerHTML = "postcode:";
+            td4.innerHTML = "Postcode:";
             td4.width=100;
             tr.appendChild(td4);
             let td5 = document.createElement("td");
-            td5.innerHTML = "woonplaats:";
+            td5.innerHTML = "Woonplaats:";
             td5.width=150;
             tr.appendChild(td5);
             let td6 = document.createElement("td");
@@ -83,20 +83,20 @@
                 tr.appendChild(td5);
                 let td6 = document.createElement("button");
                 td6.className="btn btn-success btn sm"
-                td6.innerHTML = "log in";
+                td6.innerHTML = "&#9855 log in";
                 td6.onclick = function () {
                     inloggen(td1.innerHTML);
                 };
                 tr.appendChild(td6);
                 let td7 = document.createElement("button");
                 td7.className="btn btn-warning"
-                td7.innerHTML = "wijzig klantprofiel";
+                td7.innerHTML = " &#9842 wijzig klantprofiel";
                 td7.onclick = function () {
                     verander(td1.innerHTML);
                 };
                 tr.appendChild(td7);
                 let td8 = document.createElement("button");
-                td8.innerHTML = "verwijder klantprofiel";
+                td8.innerHTML = "&#9938 verwijder klantprofiel";
                 td8.className="btn btn-danger"
                 td8.onclick = function () {
                     verwijder(td1.innerHTML);
@@ -139,12 +139,16 @@
                 </div>
                 <div class="col-sm-2">
                         <form action="file:///C:/_Files/Multiteamgit/klant_toevoegen.html">
-                            <input type="submit" class= "btn btn-primary" value="nog geen klant?" />
+                            <input type="submit" class= "btn btn-primary" value="&#9924 nog geen klant?">
                         </form>
                 </div>
 
         </div>
     <div align=center id="resultaat"></div>
+    <h5></h5>
+    <form action="file:///C:/_Files/Multiteamgit/index.html" align=center>
+        <input type="submit" class="btn btn-info" value="terug naar start" />
+    </form>
 </body>
 
 </html>

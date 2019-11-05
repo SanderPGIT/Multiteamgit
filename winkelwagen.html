@@ -10,12 +10,20 @@
 
 <head>
     <style>
+        .tablestyle{text-align: center;}
         .eerste {
             background-color: green;
         }
+
+        .dropdown-menu {
+            left: 50% !important;
+            right: auto !important;
+            text-align: center !important;
+            transform: translate(-50%, 0) !important;
+        }
     </style>
     <script>
-        var klantid=window.location.hash.substring(1,2);
+        var klantid = window.location.hash.substring(1, 2);
         console.log(klantid);
         function laadwinkelwagen() {
             var xhr = new XMLHttpRequest();
@@ -31,15 +39,18 @@
             xhr.open("GET", "http://localhost:8082/product", true);
             xhr.send();
         }
+
         function rijMaken(object) {
             var test1 = window.location.hash.substring(3);
             console.log(test1);
             var test2 = test1.replace(",", "");
             console.log(test2);
             let table = document.createElement("table");
-            table.border = 1;
+            table.className="tablestlye";
             table.id = "ditiseentabel";
+            table.border=1;
             let tr = document.createElement("tr");
+            tr.className="eerste";
             let td1 = document.createElement("th");
             td1.innerHTML = "id:";
             tr.appendChild(td1);
@@ -66,7 +77,9 @@
                         td3.innerHTML = object[i].stock;
                         tr.appendChild(td3);
                         let td4 = document.createElement("button");
-                        td4.innerHTML = "verwijder";
+                        td4.removeAttribute("border");
+                        td4.innerHTML = "&#9938 verwijder";
+                        td4.className="btn btn-danger";
                         td4.onclick = function () {
                             verwijder(td0.innerHTML);
                         }
@@ -82,8 +95,8 @@
             document.getElementById("resultaat").children[0].deleteRow(getal);
         }
 
-        var klantObject={};
-        function klantopvragen(idvanklant){
+        var klantObject = {};
+        function klantopvragen(idvanklant) {
             console.log("in klant opvragen");
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function () {
@@ -94,11 +107,11 @@
                     console.log(klantObject);
                 }
             }
-            urlklant="http://localhost:8082/klant/"+idvanklant;
-            xhr.open("GET",urlklant , true);
+            urlklant = "http://localhost:8082/klant/" + idvanklant;
+            xhr.open("GET", urlklant, true);
             xhr.send();
         }
-        
+
 
         function bevestigorder() {
             var lijst = document.getElementById("resultaat").children[0];
@@ -107,9 +120,14 @@
             for (i = 1; i < lijst.rows.length; i++) {
                 //console.log(lijst.rows[i].cells[0].innerHTML);
                 productselected(lijst.rows[i].cells[0].innerHTML);
-               
-            }
 
+            }
+            var elem = document.getElementById("mybar");
+            elem.style.width = 100 + "%";
+            elem.className = "progress-bar progress-bar-success progress-bar-striped";
+            elem.innerHTML = "100% - klaar om order te plaatsen";
+            var elem2 = document.getElementById("orderbut");
+            elem2.className=elem2.className.replace("disabled", "active")
             alert("Je bestelling is bevestigd");
         }
 
@@ -124,7 +142,6 @@
                     console.log(producten);
                     //document.getElementById("resultaat").innerHTML = "product: " + geparsed.name + " is added to order";
                     document.getElementById("hiddenid").value = producten;
-
                 }
             }
             var urlproduct = "http://localhost:8082/product/" + idproduct;
@@ -132,27 +149,34 @@
             xhr.send();
         }
 
-        function neworder(){
-                var updateRequest = new XMLHttpRequest();
-                var inputaantal = document.getElementById("aantal").value;
-				var mijnObject = {}
-                mijnObject.aantal = inputaantal;
-                mijnObject.products = producten;
-                mijnObject.deklant= klantObject;
-				//console.log(mijnObject.aantal);
-				//console.log(mijnObject.products);
-                var myJSONObject = JSON.stringify(mijnObject);
-				console.log(myJSONObject);
-                alert("bedankt voor je bestelling, veel plezier met je aankoop")
-                updateRequest.onreadystatechange = function(){
-                    console.log("readystate = veranderd");
-                }
-                updateRequest.open("POST", "http://localhost:8082/bestelling",true);
-                updateRequest.setRequestHeader("Content-type", "application/json");
-                updateRequest.send(myJSONObject); 
-                window.location.href="klanthomepage.html"+"#"+klantid; 
+        function neworder() {
+            var updateRequest = new XMLHttpRequest();
+            var inputaantal = document.getElementById("aantal").value;
+            var mijnObject = {}
+            mijnObject.aantal = inputaantal;
+            mijnObject.products = producten;
+            mijnObject.deklant = klantObject;
+            //console.log(mijnObject.aantal);
+            //console.log(mijnObject.products);
+            var myJSONObject = JSON.stringify(mijnObject);
+            console.log(myJSONObject);
+            alert("bedankt voor je bestelling, veel plezier met je aankoop")
+            updateRequest.onreadystatechange = function () {
+                console.log("readystate = veranderd");
             }
+            updateRequest.open("POST", "http://localhost:8082/bestelling", true);
+            updateRequest.setRequestHeader("Content-type", "application/json");
+            updateRequest.send(myJSONObject);
+            window.location.href = "klanthomepage.html" + "#" + klantid;
+        }
 
+        function barverder() {
+            var elem = document.getElementById("mybar");
+            elem.style.width = 75 + "%";
+            elem.innerHTML = "75% - klaar om order te bevestigen";
+            var elem2 = document.getElementById("bevestigbut");
+            elem2.className=elem2.className.replace("disabled", "active")
+        }
     </script>
 </head>
 
@@ -164,15 +188,30 @@
     </div>
     <h5></h5>
     <div id="resultaat" align="center"></div>
-    <h5></h5>
-    <h5 align="center">geen aantal eenheden op</h5>
-    <div align="center">
-        <input type=text id='aantal'>
-        <input type=button value="bevestig order" onclick="bevestigorder()">
-        <input type=button value="plaats order" onclick="neworder()">
+    <div align=center>
+        <li class="dropdown" align=center>
+            <button class="btn btn-info" type=button data-toggle="dropdown" onclick=barverder()>geef aantal op
+                </button>
+            <div class="dropdown-menu" align=center>
+                <form id="formLogin" class="form container-fluid" align=center>
+                    <div class="form-group" align=center>
+                        <label align="center" for="usr">aantal:</label>
+                        <input type="text" class="form-control" id="aantal" align=center>
+                    </div>
+                </form>
+            </div>
+        </li>
     </div>
-    <input hidden type ="number" id="hiddenid">
-
+    <div class=row align="center">
+        <input type=button class="btn btn-primary disabled"  id=bevestigbut value="bevestig order" onclick="bevestigorder()">
+        <input type=button class="btn btn-success disabled" id=orderbut value="plaats order" onclick="neworder()">
+    </div>
+    <h5></h5>
+    <input hidden type="number" id="hiddenid">
+    <div class="progress" align=center>
+        <div class="progress-bar progress-bar-warning progress-bar-striped" id="mybar" role="progressbar"
+            aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:50%" 40% Complete (success)>50% - geef aantal op</div>
+    </div>
 </body>
 
 </html>

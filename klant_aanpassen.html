@@ -1,51 +1,71 @@
 <html>
-	<head>
-		<style>
-		</style>
-		<script>
-			function verander(){
-                var idcustomer= window.location.hash.substring(1);
-                console.log(idcustomer);
-                var customernaam = document.getElementById("naam").value;
-                var customeradres = document.getElementById("adres").value;
-                var customerpostcode = document.getElementById("postcode").value;
-                var customerwoonplaats = document.getElementById("woonplaats").value;
-                var mijnObject = {};
-                mijnObject.klantid=idcustomer;
-                mijnObject.naam = customernaam;
-                mijnObject.adres = customeradres;
-                mijnObject.postcode = customerpostcode;
-                mijnObject.woonplaats = customerwoonplaats;
-                var myJSONObject = JSON.stringify(mijnObject);
-                console.log(myJSONObject);
-                var xhr = new XMLHttpRequest();
-                xhr.onreadystatechange = function(){
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
 
-                }
-                xhr.open("PUT", "http://localhost:8082/klant", true);
-                xhr.setRequestHeader("Content-type", "application/json");
-                xhr.send(myJSONObject);
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+<head>
+    <style>
+    </style>
+    <script>
+        function verander() {
+            var idcustomer = window.location.hash.substring(1);
+            console.log(idcustomer);
+            var customernaam = document.getElementById("naam").value;
+            var customeradres = document.getElementById("adres").value;
+            var customerpostcode = document.getElementById("postcode").value;
+            var customerwoonplaats = document.getElementById("woonplaats").value;
+            var mijnObject = {};
+            mijnObject.klantid = idcustomer;
+            mijnObject.naam = customernaam;
+            mijnObject.adres = customeradres;
+            mijnObject.postcode = customerpostcode;
+            mijnObject.woonplaats = customerwoonplaats;
+            var myJSONObject = JSON.stringify(mijnObject);
+            console.log(myJSONObject);
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+
             }
+            xhr.open("PUT", "http://localhost:8082/klant", true);
+            xhr.setRequestHeader("Content-type", "application/json");
+            xhr.send(myJSONObject);
+            alert("je gegevens zijn aangepast")
+        }
 
 
-		</script>
-	</head>
-	<body >
-		<h1>change customer profile</h1>
-		<h5>change or retype name:</h5>
-		<input type=text id="naam">
-		<h5>change or retype adress:</h5>
-        <input type=text id="adres">
-        <h5>change or retype postal code:</h5>
-        <input type=text id="postcode">
-        <h5>change or retype residence: </h5>
-		<input type=text id="woonplaats">
-		<h5></h5>
-		<input type="button" onclick= "verander()" value="save">
-	
-		<form action="file:///C:/_Files/Multiteamgit/klantindex.html">
-			<input type="submit" value="back to product customer overview"/>
-		</form>
-		
-	</body>
+    </script>
+</head>
+
+<body>
+    <h1>verander je gegevens</h1>
+    <div class="form-group col-sm-6">
+        <label>Naam:</label>
+        <input type=text class="form-control" id='naam'>
+    </div>
+    <div class="form-group col-sm-6">
+        <label>Straat:</label>
+        <input type=text class="form-control" size=50 id='adres'>
+    </div>
+    <div class="form-group col-sm-6">
+        <label>Postcode:</label>
+        <input type=text class="form-control" id='postcode'>
+    </div>
+    <div class="form-group col-sm-6">
+        <label>Woonplaats:</label>
+        <input type=text class="form-control" id='woonplaats'>
+    </div>
+ 
+    <input type="button" class="btn btn-warning" onclick="verander()" value="save">
+
+    <form action="file:///C:/_Files/Multiteamgit/klantindex.html">
+        <input type="submit" class="btn btn-primary" value="terug" />
+    </form>
+
+</body>
+
 </html>
