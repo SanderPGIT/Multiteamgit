@@ -23,7 +23,9 @@
         }
     </style>
     <script>
-        var klantid = window.location.hash.substring(1, 2);
+        var tweedehekje = window.location.hash.substring(1).indexOf("#");
+        console.log(tweedehekje);
+        var klantid = window.location.hash.substring(1, (tweedehekje+1));
         console.log(klantid);
         function laadwinkelwagen() {
             var xhr = new XMLHttpRequest();
@@ -41,9 +43,10 @@
         }
 
         function rijMaken(object) {
-            var test1 = window.location.hash.substring(3);
+            var tweedehekje = window.location.hash.substring(1).indexOf("#");
+            var test1 = window.location.hash.substring(tweedehekje+2);
             console.log(test1);
-            var test2 = test1.replace(",", "");
+            var test2 = test1.split(",");
             console.log(test2);
             let table = document.createElement("table");
             table.className="tablestlye";
@@ -128,7 +131,6 @@
             elem.innerHTML = "100% - klaar om order te plaatsen";
             var elem2 = document.getElementById("orderbut");
             elem2.className=elem2.className.replace("disabled", "active")
-            alert("Je bestelling is bevestigd");
         }
 
         producten = [];
