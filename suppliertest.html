@@ -1,0 +1,255 @@
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <style>
+        .title {
+            color: blue;
+        }
+
+        .allesuppliers {
+            color: darkblue;
+            font-size: 20px;
+        }
+    </style>
+    <script>
+        function lijstOpvragen() {
+            document.getElementById("lijstsuppliers").innerHTML = null;
+            document.getElementById("lijstsuppliers").innerHTML = "<strong>" + "Leveranciernr: " + "</strong>" + "<strong>" + "naam: " + "</strong>" + "<strong>" + "product: " + "</strong>" + "<br>";
+            var requestVar = new XMLHttpRequest();
+            requestVar.onreadystatechange = function () {
+                console.log("readystate is changed");
+                if (requestVar.readyState == 4) {
+                    var reactie = this.responseText;
+                    //console.log(reactie);
+
+                    var JSONObject = JSON.parse(reactie);
+                    console.log(JSONObject);
+
+                    for (i = 0; i < JSONObject.length; i++) {
+                        //console.log(i);
+                        //console.log(JSONObject[i].products.length==0);
+                        if (JSONObject[i].products.length == 0) {
+                            document.getElementById("lijstsuppliers").innerHTML += JSONObject[i].id + "       ,  " + JSONObject[i].name + "  ,   " + "<br>";
+                        } else {
+                            document.getElementById("lijstsuppliers").innerHTML += JSONObject[i].id + "       , " + JSONObject[i].name + "  ,   " + JSONObject[i].products[0].name + "<br>";
+                        }
+
+                    }
+                }
+
+            }
+            requestVar.open("GET", "http://localhost:8082/supplier", true);
+            requestVar.send();
+        }
+
+
+        function addSupplier() {
+            var requestVar = new XMLHttpRequest();
+            var object = {};
+            object.name = document.getElementById("naamsupplier").value;
+            console.log(object);
+            requestVar.onreadystatechange = function () {
+                console.log("readystate = changed");
+            }
+            var myJSON = JSON.stringify(object);
+            console.log(myJSON);
+
+            requestVar.open("POST", "http://localhost:8082/supplier", true);
+            requestVar.setRequestHeader("Content-type", "application/json");
+            requestVar.send(myJSON);
+
+            document.getElementById("naamsupplier").value = null;
+        }
+
+        function delSupplier() {
+            var url = "http://localhost:8082/supplier/";
+            var requestVar = new XMLHttpRequest();
+            var id = document.getElementById("idverwijderen").value;
+            console.log(id);
+            requestVar.onreadystatechange = function () {
+                console.log("readystate has changed");
+            }
+            var urlproduct = url + id;
+            console.log(urlproduct);
+
+
+            requestVar.open("DELETE", urlproduct, true);
+            requestVar.send();
+            document.getElementById("idverwijderen").value = null;
+        }
+
+        function pasSupplierAan() {
+            var requestVar = new XMLHttpRequest();
+            var object = {};
+            object.id = document.getElementById("teveranderenid").value;
+            object.name = document.getElementById("verandernaam").value;
+            console.log(object);
+            requestVar.onreadystatechange = function () {
+                console.log("readystate = changed");
+            }
+            var myJSON = JSON.stringify(object);
+            console.log(myJSON);
+
+            requestVar.open("PUT", "http://localhost:8082/supplier", true);
+            requestVar.setRequestHeader("Content-type", "application/json");
+            requestVar.send(myJSON);
+
+            document.getElementById("teveranderenid").value = null;
+            document.getElementById("verandernaam").value = null;
+        }
+
+        function loadDropdownSupplier() {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                console.log("readystate is changed");
+                if (xhr.readyState == 4) {
+                    var response = this.responseText;
+                    console.log(response);
+
+                    var JSONObject = JSON.parse(response);
+                    console.log(JSONObject);
+
+                    console.log("dropdown wordt geladen");
+                    var selectdd = document.getElementById("dropdownSupplier");
+                    for (i = 0; i < JSONObject.length; i++) {
+                        var para = document.createElement("option");
+                        para.innerHTML = JSONObject[i].name;
+                        para.value = JSONObject[i].id;
+                        selectdd.appendChild(para);
+                    }
+                }
+            }
+            xhr.open("GET", "http://localhost:8082/supplier", true);
+            xhr.send();
+        }
+
+        function loadDropdownProduct() {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                console.log("readystate is changed");
+                if (xhr.readyState == 4) {
+                    var response = this.responseText;
+                    console.log(response);
+
+                    var JSONObject = JSON.parse(response);
+                    console.log(JSONObject);
+
+                    console.log("dropdown wordt geladen");
+                    var selectdd = document.getElementById("dropdownProduct");
+                    for (i = 0; i < JSONObject.length; i++) {
+                        var para = document.createElement("option");
+                        para.innerHTML = JSONObject[i].name;
+                        para.value = JSONObject[i].id;
+                        selectdd.appendChild(para);
+                    }
+                }
+            }
+            xhr.open("GET", "http://localhost:8082/product", true);
+            xhr.send();
+        }
+
+        function linkProduct() {
+            var xhr = new XMLHttpRequest();
+            var supplierId = document.getElementById("dropdownSupplier").value;
+            var productId = document.getElementById("dropdownProduct").value;
+            var url = "http://localhost:8082/supplier/" + supplierId + "/" + productId;
+            console.log(url);
+            console.log(supplierId + ", " + productId);
+            xhr.onreadystatechange = function () {
+                console.log("readystate changed");
+            }
+            xhr.open("PUT", url, true);
+            xhr.send();
+        }
+
+        function goHome() {
+            window.location.href = "index.html";
+        }
+
+        function naarleveringen() {
+            window.location.href = "supplyOrder.html";
+        }
+
+    </script>
+</head>
+
+<body onload="lijstOpvragen(), loadDropdownSupplier(), loadDropdownProduct()">
+    <div class="jumbotron text-center">
+        <h1 class="title">Leveranciers</h1>
+        <p></p>
+    </div>
+
+    <div class="allesuppliers" align="center" id="lijstsuppliers"></div><br>
+    <div align=center>
+        <a class="btn btn-default" onclick="lijstOpvragen()">
+            <span class="glyphicon glyphicon-refresh"></span> Lijst vernieuwen
+        </a>
+    </div>
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4">
+                <h3 class="title">Nieuwe leverancier</h3>
+                <input type="text" size="23" id="naamsupplier" placeholder="Voer leverancier in">
+                <h5></h5>
+                <a class="btn btn-info" onclick="addSupplier()">
+                    <span class="glyphicon glyphicon-plus"></span> toevoegen
+                </a>
+                <h3 class="title">Verwijder leverancier</h3>
+                <input type="text" size="23" id="idverwijderen" placeholder="Voer ID in dat verwijderd wordt">
+                <h5></h5>
+                <a class="btn btn-danger" onclick="delSupplier()">
+                    <span class="glyphicon glyphicon-trash"></span> verwijderen
+                </a>
+            </div>
+            <div class="col-sm-4">
+                <h3 class="title">Leveranciers aanpassen</h3>
+                <input type="text" size="23" id="teveranderenid" placeholder="Voer te veranderen id in"><br>
+                <h5></h5>
+                <input type="text" size="23" id="verandernaam" placeholder="Voer nieuwe supplier in">
+                <h5></h5>
+                <a class="btn btn-warning" id=aanpassen onclick=pasSupplierAan()>
+                    <span class="glyphicon glyphicon-wrench"></span> veranderen
+                </a>
+            </div>
+            <div class="col-sm-4">
+                <h3 class="title">voeg product toe</h3>
+                <select id="dropdownSupplier">
+                    <option>kies een leveraar</option>
+                </select> <br>
+                <h5></h5>
+                <select id="dropdownProduct">
+                    <option>kies een product</option>
+                </select> <br>
+                <h5></h5>
+                <a class="btn btn-info" onclick="linkProduct()">
+                    <span class="glyphicon glyphicon-plus"></span> voeg toe
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <br>
+        <div class="col-sm-6" align="right">
+            <a class="btn btn-success" onclick="naarleveringen()">
+                <span class="glyphicon glyphicon-ok"></span> ga naar leveringen
+            </a>
+        </div>
+        <div class="col-sm-6" align="left">
+            <a class="btn btn-link" onclick="goHome()">
+                <span class="glyphicon glyphicon-home"></span> startpagina
+            </a>
+        </div>
+    </div>
+
+
+</body>
+
+</html>

@@ -1,159 +1,176 @@
 <html>
-    <head>
-        <style>
-        </style>
-        <script>
-                function lijstOpvragen(){
-                    document.getElementById("lijstorders").innerHTML = null;
-                var requestVar = new XMLHttpRequest();
-                requestVar.onreadystatechange=function(){
-                    console.log("readystate is changed");
-                    if(requestVar.readyState==4){
+
+<head>
+    <style>
+    </style>
+    <script>
+        function lijstOpvragen() {
+            document.getElementById("lijstorders").innerHTML = null;
+            var requestVar = new XMLHttpRequest();
+            requestVar.onreadystatechange = function () {
+                console.log("readystate is changed");
+                if (requestVar.readyState == 4) {
                     var reactie = this.responseText;
                     console.log(reactie);
 
                     var JSONObject = JSON.parse(reactie);
-                    console.log(JSONObject);                    
-                    
-                    for(i=0;i<JSONObject.length;i++){
+                    console.log(JSONObject);
+
+                    for (i = 0; i < JSONObject.length; i++) {
                         console.log(i);
-                        document.getElementById("lijstorders").innerHTML += JSONObject[i].id + ", " + JSONObject[i].supplier.name +" ("+JSONObject[i].supplier.productType + "), " + JSONObject[i].amount + ", " + JSONObject[i].delivered + "<br>" ;
+                        document.getElementById("lijstorders").innerHTML += JSONObject[i].id + ", " + JSONObject[i].supplier.name + " (" + JSONObject[i].supplier.products[0].name + "), " + JSONObject[i].amount + ", " + JSONObject[i].delivered + "<br>";
                     }
-                    }
-                    
                 }
-                requestVar.open("GET","http://localhost:8082/supplyOrder",true);
-                requestVar.send();
-            }
 
-            function addOrder(){
-                var requestVar = new XMLHttpRequest();
-                var object ={};
-                object.amount = document.getElementById("orderaantal").value;
-                object.delivered = document.getElementById("afgeleverd").value;
-                supplier = document.getElementById("dropdown").value;
-                console.log(object);
-                requestVar.onreadystatechange=function(){
-                    console.log("readystate = changed");
+            }
+            requestVar.open("GET", "http://localhost:8082/supplyOrder", true);
+            requestVar.send();
+        }
+
+        function addOrder() {
+            var requestVar = new XMLHttpRequest();
+            var object = {};
+            object.amount = document.getElementById("orderaantal").value;
+            object.delivered = document.getElementById("afgeleverd").value;
+            supplier = document.getElementById("dropdown").value;
+            console.log(object);
+            console.log(supplier);
+            var productide;
+            for(k=0; k<leveraars.length; k++){
+                if(leveraars[k].id==supplier){
+                    productide=leveraars[k].products[0].id;
+                    console.log(productide);
                 }
-                var myJSON = JSON.stringify(object);
-                console.log(myJSON);
-
-                var urlproduct="http://localhost:8082/supplyOrder/"+supplier;
-                console.log(urlproduct);
-                requestVar.open("POST",urlproduct,true);
-                requestVar.setRequestHeader("Content-type", "application/json");
-                requestVar.send(myJSON);
-
-                document.getElementById("orderaantal").value = null;
-                document.getElementById("afgeleverd").value = null;
             }
-
-            function delOrder(){
-                var url = "http://localhost:8082/supplyOrder/";
-                var requestVar = new XMLHttpRequest();
-                var id = document.getElementById("idverwijderen").value;
-                console.log(id);
-                requestVar.onreadystatechange = function(){
-                    console.log("readystate has changed");
-                }
-                var urlproduct = url+id;
-                console.log(urlproduct);
-
-
-                requestVar.open("DELETE",urlproduct,true);
-                requestVar.send();
-
-                document.getElementById("idverwijderen").value = null;
+            requestVar.onreadystatechange = function () {
+                console.log("readystate = changed");
             }
+            var myJSON = JSON.stringify(object);
+            console.log(myJSON);
 
-            function pasOrderAan(){
-                var requestVar = new XMLHttpRequest();
-                var object ={};
-                object.id = document.getElementById("veranderid").value;
-                object.amount= document.getElementById("veranderaantal").value;
-                object.delivered = document.getElementById("verandergeleverd").value;
-                supplier = document.getElementById("dropdown2").value
-                console.log(object);
-                requestVar.onreadystatechange=function(){
-                    console.log("readystate = changed");
-                }
-                var myJSON = JSON.stringify(object);
-                console.log(myJSON);
+            var urlproduct = "http://localhost:8082/supplyOrder/" + supplier +"/"+ productide
+            console.log(urlproduct);
+            requestVar.open("POST", urlproduct, true);
+            requestVar.setRequestHeader("Content-type", "application/json");
+            requestVar.send(myJSON);
 
-                var urlproduct = "http://localhost:8082/supplyOrder/"+supplier
-                requestVar.open("PUT",urlproduct,true);
-                requestVar.setRequestHeader("Content-type", "application/json");
-                requestVar.send(myJSON);
+            document.getElementById("orderaantal").value = null;
+            document.getElementById("afgeleverd").value = null;
+        }
 
-                document.getElementById("veranderid").value=null;
-                document.getElementById("verandergeleverd").value = null;
-                document.getElementById("veranderaantal").value = null;
+        function delOrder() {
+            var url = "http://localhost:8082/supplyOrder/";
+            var requestVar = new XMLHttpRequest();
+            var id = document.getElementById("idverwijderen").value;
+            console.log(id);
+            requestVar.onreadystatechange = function () {
+                console.log("readystate has changed");
             }
+            var urlproduct = url + id;
+            console.log(urlproduct);
 
-            function loadDropdown(){
-                var requestVar = new XMLHttpRequest();
-                requestVar.onreadystatechange=function(){
-                    console.log("readystate is changed");
-                    if(requestVar.readyState==4){
-                        var reactie = this.responseText;
-                        console.log(reactie);
 
-                        var JSONObject = JSON.parse(reactie);
-                        console.log(JSONObject);
+            requestVar.open("DELETE", urlproduct, true);
+            requestVar.send();
 
-                        console.log("dropdown wordt geladen");
-                        var selectdd = document.getElementById("dropdown", "dropdown2");
-                        for(i=0;i<JSONObject.length;i++){
-                            var para = document.createElement("option");
-                            para.innerHTML=JSONObject[i].name+" ("+JSONObject[i].productType+")";
-                            para.value=JSONObject[i].id;
+            document.getElementById("idverwijderen").value = null;
+        }
+
+        function pasOrderAan() {
+            var requestVar = new XMLHttpRequest();
+            var object = {};
+            object.id = document.getElementById("veranderid").value;
+            object.amount = document.getElementById("veranderaantal").value;
+            object.delivered = document.getElementById("verandergeleverd").value;
+            supplier = document.getElementById("dropdown2").value
+            console.log(object);
+            requestVar.onreadystatechange = function () {
+                console.log("readystate = changed");
+            }
+            var myJSON = JSON.stringify(object);
+            console.log(myJSON);
+
+            var urlproduct = "http://localhost:8082/supplyOrder/" + supplier
+            requestVar.open("PUT", urlproduct, true);
+            requestVar.setRequestHeader("Content-type", "application/json");
+            requestVar.send(myJSON);
+
+            document.getElementById("veranderid").value = null;
+            document.getElementById("verandergeleverd").value = null;
+            document.getElementById("veranderaantal").value = null;
+        }
+        leveraars={};
+        function loadDropdown() {
+            var requestVar = new XMLHttpRequest();
+            requestVar.onreadystatechange = function () {
+                console.log("readystate is changed");
+                if (requestVar.readyState == 4) {
+                    var reactie = this.responseText;
+                    console.log(reactie);
+
+                    var JSONObject = JSON.parse(reactie);
+                    console.log(JSONObject);
+                    leveraars=JSONObject;
+                    console.log(leveraars);
+
+                    console.log("dropdown wordt geladen");
+                    var selectdd = document.getElementById("dropdown", "dropdown2");
+                    for (i = 0; i < JSONObject.length; i++) {
+                        var para = document.createElement("option");
+                        if (JSONObject[i].products.length != 0) {
+                            para.innerHTML = JSONObject[i].name + " (" + JSONObject[i].products[0].name + ")";
+                            para.value = JSONObject[i].id;
                             selectdd.appendChild(para);
                         }
-                        var selectdd2 = document.getElementById("dropdown2");
-                        for(i=0;i<JSONObject.length;i++){
-                            var para = document.createElement("option");
-                            para.innerHTML = JSONObject[i].name+" ("+JSONObject[i].productType+")";
-                            para.value=JSONObject[i].id;
+                    }
+                    var selectdd2 = document.getElementById("dropdown2");
+                    for (i = 0; i < JSONObject.length; i++) {
+                        var para = document.createElement("option");
+                        if (JSONObject[i].products.length != 0) {
+                            para.innerHTML = JSONObject[i].name + " (" + JSONObject[i].products[0].name + ")";
+                            para.value = JSONObject[i].id;
                             selectdd2.appendChild(para);
-                        }               
+                        }
                     }
                 }
-                requestVar.open("GET","http://localhost:8082/supplier",true);
-                requestVar.send();
             }
+            requestVar.open("GET", "http://localhost:8082/supplier", true);
+            requestVar.send();
+        }
 
 
 
-        </script>
-    </head>
-    <body  onload="loadDropdown(),lijstOpvragen()">
-        <h1>Leveringen</h1>
-        <h2>Voeg een levering toe</h2>
-        <div id="lijstorders"></div><br>
+    </script>
+</head>
 
-        <select id="dropdown" >
-            <option >kies een leveraar</option>
-        </select> <br>
-        <input type="text" size="23" id="orderaantal" placeholder="voer aantal in"><br>
-        <input type="text" size="23" id="afgeleverd" placeholder="afgeleverd? (true/false)">
-        <input type="button" id="addOrder" value="Toevoegen" onclick="addOrder()"><br><br>
-        <input type="button" value="Lijst vernieuwen" onclick="lijstOpvragen()">
-        <h2>Verwijder een levering</h2>
-        <input type="text" size="23" id="idverwijderen" placeholder="Voer te verwijderen orderID in">
-        <input type="button" id="delOrder", value="Verwijderen" onclick="delOrder()"><br>
-        <h2>Verander de status van een order</h2>
-        <select id="dropdown2" >
-            <option >kies een nieuwe leveraar</option>
-        </select><br>
-        <input type="text" size="23" id="veranderid" placeholder="Geef te veranderen id"><br>
-        <input type="text" size="23" id="veranderaantal" placeholder="Voer nieuw aantal in" ><br>
-        <input type="text" size="23" id="verandergeleverd" placeholder="Pas 'geleverd' aan">
-        <input type="button" id="aanpassen" onclick="pasOrderAan()" value="Veranderen"><br><br>
-        <form action="C:\_Files\Multiteamgit\supplier.html">
-            <input type="submit" value="ga naar leveranciers">
-        </form>
-        
-                
-    </body>
+<body onload="loadDropdown(),lijstOpvragen()">
+    <h1>Leveringen</h1>
+    <h2>Voeg een levering toe</h2>
+    <div id="lijstorders"></div><br>
+
+    <select id="dropdown">
+        <option>kies een leveraar</option>
+    </select> <br>
+    <input type="text" size="23" id="orderaantal" placeholder="voer aantal in"><br>
+    <input type="text" size="23" id="afgeleverd" placeholder="afgeleverd? (true/false)">
+    <input type="button" id="addOrder" value="Toevoegen" onclick="addOrder()"><br><br>
+    <input type="button" value="Lijst vernieuwen" onclick="lijstOpvragen()">
+    <h2>Verwijder een levering</h2>
+    <input type="text" size="23" id="idverwijderen" placeholder="Voer te verwijderen orderID in">
+    <input type="button" id="delOrder" , value="Verwijderen" onclick="delOrder()"><br>
+    <h2>Verander de status van een order</h2>
+    <select id="dropdown2">
+        <option>kies een nieuwe leveraar</option>
+    </select><br>
+    <input type="text" size="23" id="veranderid" placeholder="Geef te veranderen id"><br>
+    <input type="text" size="23" id="veranderaantal" placeholder="Voer nieuw aantal in"><br>
+    <input type="text" size="23" id="verandergeleverd" placeholder="Pas 'geleverd' aan">
+    <input type="button" id="aanpassen" onclick="pasOrderAan()" value="Veranderen"><br><br>
+    <form action="C:\_Files\Multiteamgit\suppliertest.html">
+        <input type="submit" value="ga naar leveranciers">
+    </form>
+
+
+</body>
+
 </html>
