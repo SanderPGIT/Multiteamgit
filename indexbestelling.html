@@ -11,6 +11,7 @@
 <head>
     <style>
         .eerste{background-color: green;}
+        .table-style{text-align:center;}
     </style>
     <script>
         function lijstOpvragen() {
@@ -33,19 +34,20 @@
             let table = document.createElement("table");
             table.border = 1;
             table.id = "ditiseentabel";
+            table.className="table-style";
             let tr = document.createElement("tr");
             tr.className= "eerste";  
             let td1 = document.createElement("th");
-            td1.innerHTML = "id:";
+            td1.innerHTML = "bestellingnr:";
             tr.appendChild(td1);
             let td2 = document.createElement("th");
-            td2.innerHTML = "amount:";
+            td2.innerHTML = "hoeveelheid:";
             tr.appendChild(td2);
             let td3 = document.createElement("th");
-            td3.innerHTML = "klantid:";
+            td3.innerHTML = "klantnr:";
             tr.appendChild(td3);
             let td4 = document.createElement("th");
-            td4.innerHTML = "products:";
+            td4.innerHTML = "producten:";
             tr.appendChild(td4);
             table.appendChild(tr);
             for (i = 0; i < object.length; i++) {
@@ -67,9 +69,21 @@
                         td3.innerHTML = object[i].products[j].name;
                         tr.appendChild(td3);
                         table.appendChild(tr)
-                    } else {
+                    }else if(j==(object[i].products.length-1)){
                         let tr2 = document.createElement("tr");
                         tr2.style.borderBottomColor = "red";
+                        let td4 = document.createElement("td");
+                        let td5 = document.createElement("td");
+                        let td55 = document.createElement("td");
+                        let td6 = document.createElement("td");
+                        td6.innerHTML = object[i].products[j].name;
+                        tr2.appendChild(td4);
+                        tr2.appendChild(td5);
+                        tr2.appendChild(td55);
+                        tr2.appendChild(td6);
+                        table.appendChild(tr2);
+                    } else {
+                        let tr2 = document.createElement("tr");
                         let td4 = document.createElement("td");
                         let td5 = document.createElement("td");
                         let td55 = document.createElement("td");
