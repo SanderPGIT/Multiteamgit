@@ -11,13 +11,13 @@
             function lijstOpvragen(){
                 var requestVar = new XMLHttpRequest();
                 requestVar.onreadystatechange=function(){
-                    console.log("readystate is changed");
+                    //console.log("readystate is changed");
                     if(requestVar.readyState==4){
                     var reactie = this.responseText;
-                    console.log(reactie);
+                    //console.log(reactie);
 
                     var JSONObject = JSON.parse(reactie);
-                    console.log(JSONObject);                    
+                    //console.log(JSONObject);                    
                     
                     for(i=0;i<JSONObject.length;i++){
                         console.log(i);
@@ -54,11 +54,11 @@
                 tr.appendChild(th6);
                 table.appendChild(tr);
                 for(i=0;i<objectS.length;i++){
-                    console.log(objectS[i]);
+                    //console.log(objectS[i]);
                     var suppId = objectS[i].supplier.id;
                     var geleverd = objectS[i].delivered;
                     var orderId = objectS[i].id;
-                    console.log(suppId+" "+geleverd + " " + orderId);
+                    //console.log(suppId+" "+geleverd + " " + orderId);
                     let tr = document.createElement("tr");
                     let td1 = document.createElement("td");
                     td1.innerHTML= objectS[i].id;
@@ -82,13 +82,14 @@
                         annuleerOrder(td1.innerHTML);
                     };
                     tr.appendChild(btn1);
-                    let td6 = document.createElement("td");
-                    tr.appendChild(td6);
                     let btn2 = document.createElement("button");
-                    btn2.innerHTML = "Verwerken"+orderId;
-                    btn2.onclick = function(){
-                        verwerkOrder(suppId, geleverd, orderId);
-                    };
+                    btn2.innerHTML = "Verwerken";
+                    btn2.onclick = (function(a, b, c) {
+                        return function() {
+                            verwerkOrder(a, b, c);
+                        };
+                    })(objectS[i].supplier.id, objectS[i].delivered, objectS[i].id);
+
                     tr.appendChild(btn2);                
                     table.appendChild(tr);
                 }
@@ -105,12 +106,12 @@
                 console.log(url);
                 var xhr = new XMLHttpRequest();
                 xhr.onreadystatechange = function(){
-                    console.log("readystate has changed");
+                    //console.log("readystate has changed");
+                    refresh();
                 }
                 
                 xhr.open("DELETE",url,true);
                 xhr.send();
-                window.location.href=window.location.href;
             }
 
             function verzendOrder(){
@@ -118,25 +119,28 @@
                 var xhr = new XMLHttpRequest();
                 var object= {};
                 object.amount= document.getElementById("invoerAantal").value;
-                object.delivered;
-                supplier = document.getElementById("dropdown").value;
+                supplier = mijnProductSupplier.id;
                 product = mijnProduct.id;
                 console.log(product);
-                xhr.onreadystatechange = console.log("readystate is changed");
-                var myJSON = JSON.stringify(object);
-                console.log(myJSON);
+                xhr.onreadystatechange = function(){
+                    //console.log("readystate is changed");
+                    refresh();
+                }
+                    var myJSON = JSON.stringify(object);
+                    console.log(myJSON);
 
-                var urlProduct="http://localhost:8082/supplyOrder/"+supplier+"/product?productId="+product;
-                console.log(urlProduct);
-                xhr.open("POST",urlProduct,true);
-                xhr.setRequestHeader("Content-type", "application/json");
-                xhr.send(myJSON);
+                    var urlProduct="http://localhost:8082/supplyOrder/"+supplier+"/product?productId="+product;
+                    console.log(urlProduct);
+                    xhr.open("POST",urlProduct,true);
+                    xhr.setRequestHeader("Content-type", "application/json");
+                    xhr.send(myJSON);
+                                    
             }
 
             function verwerkOrder(suppId, geleverd, orderId){
-                console.log("^^"+suppId);
+                /*console.log("^^"+suppId);
                 console.log("^^"+geleverd);
-                console.log("^^"+orderId);
+                console.log("^^"+orderId);*/
                 if(geleverd==true){
                     alert("deze bestelling is al geleverd!");
                 }else{
@@ -146,7 +150,7 @@
                     object.delivered=true;
                     console.log(object+"+++");
                     xhr.onreadystatechange= function(){
-                        console.log("readystate = changed");
+                        //console.log("readystate = changed");
                     }
                     var myJSON = JSON.stringify(object);
                     console.log(myJSON);
@@ -160,50 +164,22 @@
                 
             }
 
-            function loadDropdown(){
-                var requestVar = new XMLHttpRequest();
-                requestVar.onreadystatechange=function(){
-                    console.log("readystate is changed");
-                    if(requestVar.readyState==4){
-                        var xhr = this.responseText;
-                        console.log(xhr);
-
-                        var JSONObject = JSON.parse(xhr);
-                        console.log(JSONObject);
-
-                        console.log("dropdown wordt geladen");
-                        var selectdd = document.getElementById("dropdown");
-                        for(i=0;i<JSONObject.length;i++){
-                            var para = document.createElement("option");
-                            para.innerHTML=JSONObject[i].name;
-                            para.value=JSONObject[i].id;
-                            selectdd.appendChild(para);
-                        }                                     
-                    }
-                }
-                requestVar.open("GET","http://localhost:8082/supplier",true);
-                requestVar.send();
-            }
 
             mijnProduct = {}
+            mijnProductSupplier = {}
+            
 
             function getProduct(){
                 var requestVar = new XMLHttpRequest();
                 requestVar.onreadystatechange=function(){
-                    console.log("readystate is changed");
+                    //console.log("readystate is changed");
                     if(requestVar.readyState==4){
                     var reactie = this.responseText;
                     console.log(reactie);
 
                     mijnProduct = JSON.parse(reactie);
                     console.log(mijnProduct);
-                    var JSONObject = JSON.parse(reactie);
-                    console.log(JSONObject);
 
-                    document.getElementById("naam").innerHTML="Product: "+JSONObject.name;
-                    document.getElementById("leverancier").innerHTML="Leverancier: "+JSONObject.supplier.name;
-                    document.getElementById("voorraad").innerHTML="Voorraad: "+JSONObject.stock;
-                    console.log(JSONObject.Supplier);                 
                     }
                     
                 }
@@ -214,6 +190,37 @@
                 console.log(urlProduct);
                 requestVar.open("GET",urlProduct,true);
                 requestVar.send();
+                getProductSupplier();
+            }
+
+            function getProductSupplier(){
+                console.log("functie aangeroepen!!!!!")
+                var xhr=new XMLHttpRequest();
+                xhr.onreadystatechange = function(){
+                    console.log("readystate changed");
+                
+                    if(xhr.readyState==4){
+                        var reactie = this.responseText;
+                        mijnProductSupplier = JSON.parse(reactie);
+                        console.log(mijnProductSupplier);
+                        vulTekst();
+                    }
+                }
+                
+                var url= new URL(window.location.href);
+                var urlproduct = "http://localhost:8082/supplier/"+url.searchParams.get("id");
+                console.log(urlproduct);
+                xhr.open("GET",urlproduct,true);
+                xhr.send();
+                
+            }
+
+            function vulTekst(){
+                document.getElementById("naam").innerHTML="Product: "+mijnProduct.name;
+                    document.getElementById("leverancier").innerHTML="Leverancier: "+mijnProductSupplier.name;
+                    document.getElementById("voorraad").innerHTML="Voorraad: "+mijnProduct.stock;
+                    console.log(mijnProductSupplier);                 
+
             }
 
             function gaNaarStorage(){
@@ -224,18 +231,19 @@
                 window.location.href="index.html";
             }
 
+            function refresh(){
+                window.location.href=window.location.href;
+            }
+
 
             
         </script>
     </head>
-    <body onload="getProduct(), loadDropdown(), lijstOpvragen()">
+    <body onload="getProduct(), lijstOpvragen()">
         <h1>Bestellen</h1>
         <div id="naam"></div>
         <div id="leverancier"></div>
         <div id="voorraad"></div><br>
-        <select id="dropdown" >
-            <option >kies een leveraar</option>
-        </select> <br>
         <input type="text" id="invoerAantal" placeholder="Voer te bestellen aantal in"><br>
         <input type="button" id="verzendOrder" value="Verzenden" onclick="verzendOrder()">
         <br><br>

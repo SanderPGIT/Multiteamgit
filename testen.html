@@ -1,0 +1,63 @@
+<html>
+    <head>
+        <script>
+
+            mijnProduct = {};
+            mijnProductSupplier = {};
+
+            function getProduct(){
+                var requestVar = new XMLHttpRequest();
+                requestVar.onreadystatechange=function(){
+                    //console.log("readystate is changed");
+                    if(requestVar.readyState==4){
+                    var reactie = this.responseText;
+                    console.log(reactie);
+
+                    mijnProduct = JSON.parse(reactie);
+                    console.log(mijnProduct);
+                    var JSONObject = JSON.parse(reactie);
+                    console.log(JSONObject);
+
+                    document.getElementById("naam").innerHTML="Product: "+JSONObject.name;
+                    document.getElementById("leverancier").innerHTML="Leverancier: "+mijnProductSupplier.name;
+                    document.getElementById("voorraad").innerHTML="Voorraad: "+JSONObject.stock;
+                    console.log(mijnProductSupplier.name);                 
+                    }
+                    
+                }
+                var url = new URL(window.location.href);
+                var getParam = 2;
+                console.log(getParam);
+                var urlProduct = "http://localhost:8082/order/"+getParam;
+                console.log(urlProduct);
+                requestVar.open("GET",urlProduct,true);
+                requestVar.send();
+                getProductSupplier();
+            }
+
+            function getProductSupplier(){
+                console.log("functie aangeroepen!!!!!")
+                var xhr=new XMLHttpRequest();
+                xhr.onreadystatechange = function(){
+                    console.log("readystate changed");
+                
+                    if(xhr.readyState==4){
+                        var reactie = this.responseText;
+                        mijnProductSupplier = JSON.parse(reactie);
+                        console.log(mijnProductSupplier);
+                    }
+                }
+                
+                xhr.open("GET","http://localhost:8082/supplier/suppByProduct",true);
+                xhr.setRequestHeader("Content-type", "application/json");
+                xhr.send();
+            }
+        </script>
+    </head>
+    <body onload="getProduct()">
+        <div id="naam"></div>
+        <div id="leverancier"></div>
+        <div id="voorraad"></div>
+    </body>
+</html>
+
